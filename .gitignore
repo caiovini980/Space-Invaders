@@ -30,3 +30,12 @@
 *.exe
 *.out
 *.app
+
+# Builds
+bin/
+
+# Rider files
+.idea/
+
+# Visual Studio Files
+.vs/
