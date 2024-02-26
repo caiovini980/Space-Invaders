@@ -21,7 +21,7 @@ int main(int argc, char* argv[])
     // ---------------------------------------
     if (glewInit() != GLEW_OK)
     {
-        std::cerr << "ERROR: Glew wasn't started propperly\n";
+        std::cerr << "ERROR: Glew wasn't started properly\n";
     }
 
     glfwSetKeyCallback(window, KeyCallback);
@@ -35,6 +35,7 @@ int main(int argc, char* argv[])
 
     // initialize game
     // ---------------
+    SpaceInvaders->Init();
 
     // deltaTime variables
     // -------------------
@@ -52,20 +53,25 @@ int main(int argc, char* argv[])
 
         // manage user input
         // -----------------
+        SpaceInvaders->ProcessInput(deltaTime);
 
         // update game state
         // -----------------
+        SpaceInvaders->Update(deltaTime);
 
         // render
         // ------
+        SpaceInvaders->Render();
+        
         glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
         glClear(GL_COLOR_BUFFER_BIT);
 
         glfwSwapBuffers(window);
     }
 
-    // delete all resources as loaded using the resource manager
+    // clear stuff
     // ---------------------------------------------------------
+    SpaceInvaders->Close();
 
     glfwTerminate();
     return 0;
