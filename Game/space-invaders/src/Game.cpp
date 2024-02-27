@@ -18,12 +18,13 @@ void Game::Init()
     std::shared_ptr<Shader> spriteShader = ResourceManager::LoadShader("res/shaders/Sprite.vertex", "res/shaders/Sprite.frag", "Test");
 
     spriteShader->Bind();
-    spriteShader->SetUniformMat4f("u_Projection", glm::ortho(0.f, 800.f, 600.f, 0.f, -1.f, 1.f));
+    glm::mat4 ortho = glm::ortho(0.f, 800.f, 600.f, 0.f, -1.f, 1.f);
+    spriteShader->SetUniformMat4f("u_Projection", ortho);
     spriteShader->SetUniform1i("u_Image", 0);
     
-    m_Texture = ResourceManager::LoadTexture("res/textures/awesomeface.png", "Face", true);
+    ResourceManager::LoadTexture("res/textures/awesomeface.png", "Face", true);
     
-    m_SpriteRenderer = std::make_shared<SpriteRenderer>(spriteShader);
+    m_SpriteRenderer = std::make_unique<SpriteRenderer>(spriteShader);
 }
 
 void Game::Update(float deltaTime)
@@ -40,7 +41,7 @@ void Game::Render()
 {
     std::cout << "Game rendering\n";
 
-    m_SpriteRenderer->Draw(*m_Texture, {400.f, 300.f}, {100.f, 100.f});
+    m_SpriteRenderer->Draw(*ResourceManager::GetTexture("Face"), {200.f, 200.f}, {100.f, 100.f});
 }
 
 void Game::Close()

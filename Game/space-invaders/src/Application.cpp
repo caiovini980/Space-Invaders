@@ -31,7 +31,7 @@ int main(int argc, char* argv[])
     // ---------------------------------------
     if (glewInit() != GLEW_OK)
     {
-        std::cerr << "ERROR: Glew wasn't started properly\n";
+        std::cout << "ERROR: Glew wasn't started properly\n";
     }
 
     glfwSetKeyCallback(window, KeyCallback);
@@ -39,9 +39,9 @@ int main(int argc, char* argv[])
 
     // OpenGL configuration
     // --------------------
-    glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT);
-    glEnable(GL_BLEND);
-    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+    GLCall(glViewport(0, 0, SCREEN_WIDTH, SCREEN_HEIGHT));
+    GLCall(glEnable(GL_BLEND));
+    GLCall(glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA));
 
     // initialize game
     // ---------------
@@ -59,7 +59,9 @@ int main(int argc, char* argv[])
         const float currentFrame = static_cast<float>(glfwGetTime());
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
-        glfwPollEvents();
+
+        GLCall(glClearColor(0.0f, 0.0f, 0.0f, 1.0f));
+        GLCall(glClear(GL_COLOR_BUFFER_BIT));
 
         // manage user input
         // -----------------
@@ -72,11 +74,9 @@ int main(int argc, char* argv[])
         // render
         // ------
         SpaceInvaders->Render();
-        
-        glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
-        glClear(GL_COLOR_BUFFER_BIT);
 
         glfwSwapBuffers(window);
+        glfwPollEvents();
     }
 
     // clear stuff

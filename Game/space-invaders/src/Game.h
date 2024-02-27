@@ -19,6 +19,5 @@ public:
 
 private:
 
-    std::shared_ptr<SpriteRenderer> m_SpriteRenderer;
-    std::shared_ptr<Texture> m_Texture;
+    std::unique_ptr<SpriteRenderer> m_SpriteRenderer;
 };

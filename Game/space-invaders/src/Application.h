@@ -1,7 +1,7 @@
 #pragma once
 #include <memory>
 
-#include <GL/glew.h>
+#include "Core.h"
 #include <GLFW/glfw3.h>
 
 #include "Game.h"
