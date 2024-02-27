@@ -2,6 +2,8 @@
 
 #include <iostream>
 
+#include "Input.h"
+
 int main(int argc, char* argv[])
 {
     if(!glfwInit())
@@ -45,7 +47,7 @@ int main(int argc, char* argv[])
 
     // initialize game
     // ---------------
-    SpaceInvaders->Init();
+    m_SpaceInvaders->Init();
 
     // deltaTime variables
     // -------------------
@@ -65,15 +67,15 @@ int main(int argc, char* argv[])
 
         // manage user input
         // -----------------
-        SpaceInvaders->ProcessInput(deltaTime);
+        m_SpaceInvaders->ProcessInput(deltaTime, *m_InputHandler);
 
         // update game state
         // -----------------
-        SpaceInvaders->Update(deltaTime);
+        m_SpaceInvaders->Update(deltaTime);
 
         // render
         // ------
-        SpaceInvaders->Render();
+        m_SpaceInvaders->Render();
 
         glfwSwapBuffers(window);
         glfwPollEvents();
@@ -81,8 +83,8 @@ int main(int argc, char* argv[])
 
     // clear stuff
     // ---------------------------------------------------------
-    SpaceInvaders->Close();
-    SpaceInvaders.reset();
+    m_SpaceInvaders->Close();
+    m_SpaceInvaders.reset();
 
     glfwTerminate();
     return 0;
@@ -100,12 +102,12 @@ void KeyCallback(GLFWwindow* window, int key, int scancode, int action, int mode
     {
         if (action == GLFW_PRESS)
         {
-
+            m_InputHandler->SetKeyStatus(key, true);
         }
 
         else if (action == GLFW_RELEASE)
         {
-
+            m_InputHandler->SetKeyStatus(key, false);
         }
     }
 }
