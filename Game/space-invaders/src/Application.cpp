@@ -82,6 +82,7 @@ int main(int argc, char* argv[])
     // clear stuff
     // ---------------------------------------------------------
     SpaceInvaders->Close();
+    SpaceInvaders.reset();
 
     glfwTerminate();
     return 0;
