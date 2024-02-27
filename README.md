@@ -10,3 +10,17 @@ Caio Aguiar and Bruno Sanches
 - GLFW
 - Sdl_Image
 - IrrKlang
+
+### Guidelines
+
+| Member                | Example        |
+|-----------------------|----------------|
+| Class                 | ClassName      |
+| Method                | DoSomething()  |
+| Private               | m_variableName |
+| Public                | Variable       |
+| Protected             | m_variableName |
+| Local                 | variableName   |
+| Enum                  | EName          |
+| Const & Static member | VARIABLE_NAME  |
+| Interface             | IName          |
