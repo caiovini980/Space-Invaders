@@ -1,0 +1,145 @@
+@startuml
+'https://plantuml.com/class-diagram
+
+package Core
+{
+    class VertexArray
+    class VertexBuffer
+    class VertexBufferLayout
+    class IndexBuffer
+    class Shader
+    class Texture
+    class SpriteRenderer
+    class TextRenderer    
+    
+    VertexArray --> VertexBufferLayout
+    VertexArray --> VertexBuffer
+    
+    SpriteRenderer --> Shader
+    SpriteRenderer --> Texture
+    SpriteRenderer --> VertexArray
+    SpriteRenderer --> VertexBuffer
+    SpriteRenderer --> IndexBuffer
+    
+    TextRenderer --> Shader
+    TextRenderer --> VertexArray
+    TextRenderer --> VertexBuffer
+    TextRenderer --> IndexBuffer
+}
+
+package SpaceInvaders
+{
+    class Application
+    {
+        int main()
+    }
+    
+    class Game
+    {
+        vector<GameObject> EnemyProjectiles;
+        vector<GameObject> PlayerProjectiles;
+        void ProcessInput(float deltaTime)
+        void Update(float deltaTime)
+        void Render()
+    }
+    
+    class GameLevel
+    {
+        vector<GameObject> Barriers
+        void Update(float deltaTime)
+        void Render()
+    }
+    
+    class Input
+    {
+        static bool GetKey(int key)
+    }
+    
+    class GameObject
+    {
+        vec3 Position
+        
+        void Render()
+    }
+    
+    class Collision
+    {
+        static bool IsColliding(const GameObject& a, const GameObject& b)
+    }
+    
+    class Audio
+    
+    enum EGameState
+    {
+        MainMenu
+        Playing
+        GameOver           
+    }
+    
+    class ParticleEmitter
+    
+'    enum ECollisionChannel
+'    {
+'        Player
+'        Enemies
+'        Environment
+'    }
+    
+    interface IProjectileHandler
+    {
+        void AddPlayerProjectile(GameObject projectile)
+        void AddEnemyProjectile(GameObject projectile)
+    }
+    
+    class ResourceManager
+    
+    package Enemies
+    {
+        class EnemyManager
+        {
+            vector<GameObject> Enemies;
+            void Update(float deltaTime)
+            void Render(SpriteRenderer& renderer)
+        }
+        
+        EnemyManager ---> GameObject
+        EnemyManager ---> Audio
+        EnemyManager ---> ParticleEmitter
+        IProjectileHandler <... EnemyManager 
+    }
+    
+    package Players
+    {
+        class PlayerManager
+        {
+            GameObject Player
+            void ProcessInput(float deltaTime)
+            void Render(SpriteRenderer& renderer)
+        }
+        
+        PlayerManager ---> Input
+        PlayerManager ---> Audio   
+        PlayerManager ---> ParticleEmitter
+        PlayerManager ---> GameObject
+        IProjectileHandler <... PlayerManager
+    }
+    
+    package UI
+    {
+        class UIManager
+    }            
+    
+    Application ---> Game
+    
+    Game --> GameLevel
+    Game ---> PlayerManager
+    GameLevel ---> EnemyManager
+    Game ---> Input
+    Game --> Collision
+    Game ---> UIManager
+    Game -> EGameState
+    
+    Game --|> IProjectileHandler             
+}
+
+@enduml
