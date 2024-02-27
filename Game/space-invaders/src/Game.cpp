@@ -39,7 +39,7 @@ void Game::Update(float deltaTime)
 void Game::ProcessInput(float deltaTime, const Input& input)
 {
     // std::cout << "Getting input\n";
-    m_PlayerManager->ProcessInput(deltaTime, input);
+    m_PlayerManager->ProcessInput(deltaTime, input, WIDTH);
 }
 
 void Game::Render()

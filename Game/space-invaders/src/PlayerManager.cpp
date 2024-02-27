@@ -33,20 +33,28 @@ void PlayerManager::CreatePlayer(float screenWidth, float screenHeight)
         );
 }
 
-void PlayerManager::ProcessInput(float deltaTime, const Input& input)
+void PlayerManager::ProcessInput(float deltaTime, const Input& input, float boundsWidth)
 {
-    if (input.GetKey(GLFW_KEY_D))
+    const float velocity = PLAYER_SPEED * deltaTime;
+    
+    if (input.GetKey(GLFW_KEY_A))
     {
-        std::cout << "Moving right!\n";
+        if (m_Player->Position.x >= 0)
+        {
+            m_Player->Position.x -= velocity; 
+        }
     }
     
-    else if (input.GetKey(GLFW_KEY_A))
+    else if (input.GetKey(GLFW_KEY_D))
     {
-        std::cout << "Moving left!\n";
+        if (m_Player->Position.x <= boundsWidth - m_Player->Size.x)
+        {
+            m_Player->Position.x += velocity; 
+        }
     }
 }
 
-void PlayerManager::Render(SpriteRenderer& renderer) const
+void PlayerManager::Render(const SpriteRenderer& renderer) const
 {
     renderer.Draw(*m_PlayerSprite, m_Player->Position, m_Player->Size, m_Player->Rotation, m_Player->Color);
 }
