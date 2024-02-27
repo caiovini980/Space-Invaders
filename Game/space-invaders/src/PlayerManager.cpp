@@ -16,13 +16,14 @@ void PlayerManager::CreatePlayer(float screenWidth, float screenHeight)
     std::cout << "Creating player\n";
     
     const std::string playerTextureName = "Player";
-    ResourceManager::LoadTexture("res/textures/awesomeface.png", playerTextureName, true);
+    const std::string playerTexturePath = "res/textures/ship.png";
+    ResourceManager::LoadTexture(playerTexturePath, playerTextureName, true);
     
     m_PlayerSprite = ResourceManager::GetTexture(playerTextureName);
     
     const glm::vec2 playerInitialPosition = glm::vec2(
         (screenWidth / 2.0f) - (PLAYER_SIZE.x / 2.0f),
-        screenHeight - PLAYER_SIZE.y);
+        screenHeight - PLAYER_SIZE.y - PLAYER_OFFSET.y);
     
     m_Player = std::make_shared<GameObject>(
         playerInitialPosition,
@@ -39,7 +40,7 @@ void PlayerManager::ProcessInput(float deltaTime, const Input& input, float boun
     
     if (input.GetKey(GLFW_KEY_A))
     {
-        if (m_Player->Position.x >= 0)
+        if (m_Player->Position.x >= 0 + PLAYER_OFFSET.x)
         {
             m_Player->Position.x -= velocity; 
         }
@@ -47,7 +48,7 @@ void PlayerManager::ProcessInput(float deltaTime, const Input& input, float boun
     
     else if (input.GetKey(GLFW_KEY_D))
     {
-        if (m_Player->Position.x <= boundsWidth - m_Player->Size.x)
+        if (m_Player->Position.x <= boundsWidth - (m_Player->Size.x + PLAYER_OFFSET.x))
         {
             m_Player->Position.x += velocity; 
         }

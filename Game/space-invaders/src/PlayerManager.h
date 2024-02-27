@@ -19,7 +19,8 @@ public:
     void Render(const SpriteRenderer& renderer) const;
 
 private:
-    const glm::vec2 PLAYER_SIZE = glm::vec2(100.0f, 100.0f);
+    const glm::vec2 PLAYER_SIZE = glm::vec2(60.0f, 60.0f);
+    const glm::vec2 PLAYER_OFFSET = glm::vec2(20.0f, 20.0f);
     const float PLAYER_SPEED = 500.0f;
     
     std::shared_ptr<GameObject> m_Player;
