@@ -4,7 +4,11 @@
 
 int main(int argc, char* argv[])
 {
-    glfwInit();
+    if(!glfwInit())
+    {
+        return -1;        
+    }
+
     glfwWindowHint(GLFW_CONTEXT_VERSION_MAJOR, 3);
     glfwWindowHint(GLFW_CONTEXT_VERSION_MINOR, 3);
     glfwWindowHint(GLFW_OPENGL_PROFILE, GLFW_OPENGL_CORE_PROFILE);
@@ -12,6 +16,12 @@ int main(int argc, char* argv[])
     glfwWindowHint(GLFW_RESIZABLE, false);
 
     GLFWwindow* window = glfwCreateWindow(SCREEN_WIDTH, SCREEN_HEIGHT, "Space Invaders", nullptr, nullptr);
+    if(!window)
+    {
+        glfwTerminate();
+        return -1;
+    }
+
     glfwMakeContextCurrent(window);
 
     // Activate V-Sync

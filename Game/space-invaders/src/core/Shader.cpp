@@ -5,14 +5,11 @@
 #include <iostream>
 #include <fstream>
 #include <string>
-#include <sstream>
 
 
-Shader::Shader(const std::string& filePath)
-    : m_RendererID(0), m_FilePath(filePath) 
+Shader::Shader(const std::string& vertexShaderSource, const std::string& fragmentShaderSource)
 {
-    ShaderProgramSource source = ParseShader(filePath);
-    m_RendererID = CreateShader(source.VertexSource, source.FragmentSource);
+    m_RendererID = CreateShader(vertexShaderSource, fragmentShaderSource);
 }
 
 Shader::~Shader()
@@ -92,41 +89,6 @@ int Shader::GetUniformLocation(const std::string& name) const
     m_UniformLocationCache[name] = location;
 
     return location;
-}
-
-ShaderProgramSource Shader::ParseShader(const std::string& filePath)
-{
-    std::ifstream Stream(filePath);
-
-    enum class ShaderType
-    {
-        NONE = -1, VERTEX = 0, FRAGMENT = 1
-    };
-
-    std::string Line;
-    std::stringstream Ss[2];
-    ShaderType Type = ShaderType::NONE;
-
-    while(getline(Stream, Line))
-    {
-        if(Line.find("#shader") != std::string::npos)
-        {
-            if(Line.find("vertex") != std::string::npos)
-            {
-                Type = ShaderType::VERTEX;
-            }
-            else if(Line.find("fragment") != std::string::npos)
-            {
-                Type = ShaderType::FRAGMENT;
-            }
-        }
-        else
-        {
-            Ss[(int)Type] << Line << "\n";
-        }
-    }
-
-    return {Ss[0].str(), Ss[1].str()};
 }
 
 unsigned int Shader::CreateShader(const std::string& vertexShader, const std::string& fragmentShader)

@@ -1,12 +1,10 @@
 #pragma once
 
-#include <string>
-
 class Texture
 {
 public:
 
-    Texture(const std::string& filePath, bool bUseAlpha = true, bool bFlipVertically = true);
+    Texture(unsigned char* data, unsigned int width, unsigned int height, bool bUseAlpha);
     ~Texture();
 
     void Bind(unsigned int slot = 0) const;
@@ -18,9 +16,6 @@ public:
 private:
 
     unsigned int m_RendererID{0};
-    std::string m_FilePath{};
-    unsigned char* m_LocalBuffer{nullptr};
-    int m_Width{0};
-    int m_Height{0};
-    int m_BPP{0};
+    unsigned int m_Width{0};
+    unsigned int m_Height{0};
 };

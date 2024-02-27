@@ -9,5 +9,6 @@ uniform vec3 u_SpriteColor;
 
 void main()
 {          
-    o_Color = vec4(u_SpriteColor, 1.f) * texture(u_Image, v_UV);
+    //o_Color = vec4(u_SpriteColor, 1.f) * texture(u_Image, v_UV);
+    o_Color = vec4(1.f);
 }
