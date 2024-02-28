@@ -1,7 +1,7 @@
 #include "EnemyManager.h"
 
-#include "LevelDefinition.h"
-#include "ResourceManager.h"
+#include "../LevelDefinition.h"
+#include "../ResourceManager.h"
 
 EnemyManager::EnemyManager(unsigned levelWidth, unsigned levelHeight, const LevelDefinition& levelDefinition)
     : m_LevelWidth(levelWidth), m_LevelHeight(levelHeight)

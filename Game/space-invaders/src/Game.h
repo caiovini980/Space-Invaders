@@ -9,6 +9,7 @@
 class Texture;
 class SpriteRenderer;
 class Shader;
+class GameLevel;
 
 class Game : public IProjectileHandler
 {
@@ -35,6 +36,7 @@ private:
     std::vector<GameObject> m_PlayerProjectiles;
     
     std::unique_ptr<SpriteRenderer> m_SpriteRenderer;
+    std::unique_ptr<GameLevel> m_Level;
     std::unique_ptr<PlayerManager> m_PlayerManager;
     
     void RemoveDestroyedProjectiles();
