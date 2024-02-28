@@ -5,7 +5,6 @@
 
 #include "ResourceManager.h"
 #include "SpriteRenderer.h"
-#include "PlayerManager.h"
 #include "glm/ext/matrix_clip_space.hpp"
 
 Game::Game() {}
@@ -27,30 +26,91 @@ void Game::Init()
     m_SpriteRenderer = std::make_unique<SpriteRenderer>(spriteShader);
     
     // Create Player
-    m_PlayerManager = std::make_unique<PlayerManager>();
+    m_PlayerManager = std::make_unique<PlayerManager>(*this);
     m_PlayerManager->CreatePlayer(WIDTH, HEIGHT);
 }
 
 void Game::Update(float deltaTime)
 {
-    // std::cout << "Game running\n";
+    // move player projectiles
+    for (auto& projectile : m_PlayerProjectiles)
+    {
+        // check boundaries
+        if (projectile.Position.y <= 0)
+        {
+            projectile.Destroyed = true;
+            continue;
+        }
+        
+        projectile.Position.y -= projectile.Velocity.y * deltaTime;
+    }
 }
 
 void Game::ProcessInput(float deltaTime, const Input& input)
 {
-    // std::cout << "Getting input\n";
     m_PlayerManager->ProcessInput(deltaTime, input, WIDTH);
 }
 
 void Game::Render()
 {
-    // Render Player
     m_PlayerManager->Render(*m_SpriteRenderer);
+
+    RenderProjectiles();
+    RemoveDestroyedProjectiles();
 }
 
 void Game::Close()
 {
-    std::cout << "Closing game...\n";
-
     ResourceManager::ClearAll();
+}
+
+void Game::RenderProjectiles() const
+{
+    for (auto& projectile : m_PlayerProjectiles)
+    {
+        projectile.Draw(*m_SpriteRenderer);
+    }
+}
+
+void Game::AddEnemyProjectile(GameObject&& projectile)
+{
+    GameObject newProjectile = projectile;
+    m_EnemyProjectiles.emplace_back(newProjectile);
+}
+
+void Game::AddPlayerProjectile(GameObject&& projectile)
+{
+    GameObject newProjectile = projectile;
+    m_PlayerProjectiles.emplace_back(newProjectile);
+}
+
+void Game::RemoveDestroyedProjectiles()
+{
+    auto playerIterator = m_PlayerProjectiles.begin();
+    while (playerIterator != m_PlayerProjectiles.end())
+    {
+        if (playerIterator->Destroyed)
+        {
+            playerIterator = m_PlayerProjectiles.erase(playerIterator);
+            std::cout << "Player projectile erased!\n";
+        }
+        else
+        {
+            ++playerIterator;
+        }
+    }
+
+    auto enemyIterator = m_EnemyProjectiles.begin();
+    while (enemyIterator != m_EnemyProjectiles.end())
+    {
+        if (enemyIterator->Destroyed)
+        {
+            enemyIterator = m_EnemyProjectiles.erase(enemyIterator);
+            std::cout << "Enemy projectile erased!\n";
+        }
+        else
+        {
+            ++enemyIterator;
+        }
+    }
 }
