@@ -8,7 +8,11 @@
 PlayerManager::PlayerManager(IProjectileHandler& projectileHandler)
     : m_ProjectileHandler(projectileHandler)
 {
-    
+    m_ProjectileSprite = ResourceManager::LoadTexture(
+        "res/textures/projectile.png",
+        "Projectile",
+        true
+    );
 }
 
 PlayerManager::~PlayerManager()
@@ -65,20 +69,12 @@ void PlayerManager::ProcessInput(float deltaTime, const Input& input, float boun
             CreateProjectile();
             
             m_LastShotTime = GameTime::Time;
-            bCanShoot = false;
         }
     }
 }
 
 void PlayerManager::CreateProjectile()
 {
-    // load sprite
-    const std::shared_ptr<Texture> projectileSprite = ResourceManager::LoadTexture(
-        "res/textures/projectile.png",
-        "Projectile",
-        true
-    );
-
     // set size
     constexpr glm::vec2 projectileSize = glm::vec2(20.0f, 20.0f);
         
@@ -96,7 +92,7 @@ void PlayerManager::CreateProjectile()
     GameObject projectile {
         m_ShotPosition,
         projectileSize,
-        projectileSprite,
+        m_ProjectileSprite,
         projectileColor,
         glm::vec2(projectileSpeed)
     };

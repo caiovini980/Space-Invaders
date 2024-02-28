@@ -35,10 +35,9 @@ private:
     
     std::shared_ptr<GameObject> m_Player;
     std::shared_ptr<Texture> m_PlayerSprite;
+    std::shared_ptr<Texture> m_ProjectileSprite;
 
     glm::vec2 m_ShotPosition;
     
     float m_LastShotTime = 0.0f;
-    
-    bool bCanShoot = false;
 };

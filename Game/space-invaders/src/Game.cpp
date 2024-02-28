@@ -30,20 +30,24 @@ void Game::Init()
     m_PlayerManager->CreatePlayer(WIDTH, HEIGHT);
 }
 
-void Game::Update(float deltaTime)
+void Game::UpdatePlayerProjectiles(float deltaTime)
 {
-    // move player projectiles
     for (auto& projectile : m_PlayerProjectiles)
     {
+        // update position
+        projectile.Position.y -= projectile.Velocity.y * deltaTime;
+        
         // check boundaries
         if (projectile.Position.y <= 0)
         {
             projectile.Destroyed = true;
-            continue;
         }
-        
-        projectile.Position.y -= projectile.Velocity.y * deltaTime;
     }
+}
+
+void Game::Update(float deltaTime)
+{
+    UpdatePlayerProjectiles(deltaTime);
 }
 
 void Game::ProcessInput(float deltaTime, const Input& input)
@@ -74,14 +78,12 @@ void Game::RenderProjectiles() const
 
 void Game::AddEnemyProjectile(GameObject&& projectile)
 {
-    GameObject newProjectile = projectile;
-    m_EnemyProjectiles.emplace_back(newProjectile);
+    m_EnemyProjectiles.emplace_back(std::move(projectile));
 }
 
 void Game::AddPlayerProjectile(GameObject&& projectile)
 {
-    GameObject newProjectile = projectile;
-    m_PlayerProjectiles.emplace_back(newProjectile);
+    m_PlayerProjectiles.emplace_back(std::move(projectile));
 }
 
 void Game::RemoveDestroyedProjectiles()
