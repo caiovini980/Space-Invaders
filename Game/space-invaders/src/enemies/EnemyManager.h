@@ -1,8 +1,8 @@
 #pragma once
 #include <vector>
 
-#include "GameObject.h"
-#include "LevelDefinition.h"
+#include "../GameObject.h"
+#include "../LevelDefinition.h"
 
 class SpriteRenderer;
 

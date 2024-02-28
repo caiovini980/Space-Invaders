@@ -1,31 +1,43 @@
 ﻿#pragma once
 #include <memory>
+#include <vector>
 
 #include "Input.h"
-#include "PlayerManager.h"
+#include "interfaces/IProjectileHandler.h"
+#include "players/PlayerManager.h"
 
-class GameLevel;
 class Texture;
 class SpriteRenderer;
 class Shader;
+class GameLevel;
 
-class Game
+class Game : public IProjectileHandler
 {
 public:
     Game();
     ~Game();
     
     void Init();
+    void UpdatePlayerProjectiles(float deltaTime);
     void Update(float deltaTime);
     void ProcessInput(float deltaTime, const Input& input);
+    void RenderProjectiles() const;
     void Render();
     void Close();
+
+    void AddEnemyProjectile(GameObject&& projectile) override;
+    void AddPlayerProjectile(GameObject&& projectile) override;
 
 private:
     const float WIDTH = 800.0f;
     const float HEIGHT = 600.0f;
 
+    std::vector<GameObject> m_EnemyProjectiles;
+    std::vector<GameObject> m_PlayerProjectiles;
+    
     std::unique_ptr<SpriteRenderer> m_SpriteRenderer;
     std::unique_ptr<GameLevel> m_Level;
     std::unique_ptr<PlayerManager> m_PlayerManager;
+    
+    void RemoveDestroyedProjectiles();
 };

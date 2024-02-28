@@ -100,7 +100,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>GLEW_STATIC;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>src;src\core;src\vendor;$(SolutionDir)dependencies\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src\core;src\vendor;$(SolutionDir)dependencies\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -117,7 +117,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>GLEW_STATIC;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>src;src\core;src\vendor;$(SolutionDir)dependencies\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src\core;src\vendor;$(SolutionDir)dependencies\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -134,7 +134,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>GLEW_STATIC;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>src;src\core;src\vendor;$(SolutionDir)dependencies\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src\core;src\vendor;$(SolutionDir)dependencies\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -151,7 +151,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>GLEW_STATIC;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>src;src\core;src\vendor;$(SolutionDir)dependencies\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src\core;src\vendor;$(SolutionDir)dependencies\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -177,7 +177,8 @@
     <ClCompile Include="src\GameLevel.cpp" />
     <ClCompile Include="src\GameObject.cpp" />
     <ClCompile Include="src\Input.cpp" />
-    <ClCompile Include="src\PlayerManager.cpp" />
+    <ClCompile Include="src\interfaces\IProjectileHandler.cpp" />
+    <ClCompile Include="src\players\PlayerManager.cpp" />
     <ClCompile Include="src\ResourceManager.cpp" />
     <ClCompile Include="src\utils\GameTime.cpp" />
     <ClCompile Include="src\vendor\glm\detail\glm.cpp" />
@@ -198,8 +199,9 @@
     <ClInclude Include="src\GameLevel.h" />
     <ClInclude Include="src\GameObject.h" />
     <ClInclude Include="src\Input.h" />
+    <ClInclude Include="src\interfaces\IProjectileHandler.h" />
     <ClInclude Include="src\LevelDefinition.h" />
-    <ClInclude Include="src\PlayerManager.h" />
+    <ClInclude Include="src\players\PlayerManager.h" />
     <ClInclude Include="src\ResourceManager.h" />
     <ClInclude Include="src\utils\GameTime.h" />
     <ClInclude Include="src\vendor\glm\common.hpp" />
@@ -634,6 +636,10 @@
   <ItemGroup>
     <Content Include="res\shaders\Sprite.frag" />
     <Content Include="res\shaders\Sprite.vertex" />
+    <Content Include="res\textures\awesomeface.png" />
+    <Content Include="res\textures\enemy.png" />
+    <Content Include="res\textures\projectile.png" />
+    <Content Include="res\textures\ship.png" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
