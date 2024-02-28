@@ -168,6 +168,7 @@
     <ClCompile Include="src\core\IndexBuffer.cpp" />
     <ClCompile Include="src\core\Shader.cpp" />
     <ClCompile Include="src\core\SpriteRenderer.cpp" />
+    <ClCompile Include="src\core\TextRenderer.cpp" />
     <ClCompile Include="src\core\Texture.cpp" />
     <ClCompile Include="src\core\VertexArray.cpp" />
     <ClCompile Include="src\core\VertexBuffer.cpp" />
@@ -190,6 +191,7 @@
     <ClInclude Include="src\core\IndexBuffer.h" />
     <ClInclude Include="src\core\Shader.h" />
     <ClInclude Include="src\core\SpriteRenderer.h" />
+    <ClInclude Include="src\core\TextRenderer.h" />
     <ClInclude Include="src\core\Texture.h" />
     <ClInclude Include="src\core\VertexArray.h" />
     <ClInclude Include="src\core\VertexBuffer.h" />
@@ -634,8 +636,12 @@
     <None Include="src\vendor\glm\gtx\wrap.inl" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="res\fonts\dogicapixel.ttf" />
+    <Content Include="res\fonts\dogicapixelbold.ttf" />
     <Content Include="res\shaders\Sprite.frag" />
     <Content Include="res\shaders\Sprite.vertex" />
+    <Content Include="res\shaders\Text.frag" />
+    <Content Include="res\shaders\Text.vertex" />
     <Content Include="res\textures\awesomeface.png" />
     <Content Include="res\textures\enemy.png" />
     <Content Include="res\textures\projectile.png" />
