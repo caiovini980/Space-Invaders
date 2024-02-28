@@ -26,17 +26,19 @@ void Game::Init()
     spriteShader->SetUniform1i("u_Image", 0);
     
     m_SpriteRenderer = std::make_unique<SpriteRenderer>(spriteShader);
-
-    m_Level = std::make_unique<GameLevel>(800, 600);
     
     // Create Player
     m_PlayerManager = std::make_unique<PlayerManager>(*this);
     m_PlayerManager->CreatePlayer(WIDTH, HEIGHT);
+
+    m_Level = std::make_unique<GameLevel>(800, 600, *this);
 }
 
 void Game::Update(float deltaTime)
 {
     UpdatePlayerProjectiles(deltaTime);
+    UpdateEnemyProjectiles(deltaTime);
+
     m_Level->Update(deltaTime);
 }
 
@@ -93,6 +95,19 @@ void Game::UpdatePlayerProjectiles(float deltaTime)
         
         // check boundaries
         if (projectile.Position.y <= 0)
+        {
+            projectile.Destroyed = true;
+        }
+    }
+}
+
+void Game::UpdateEnemyProjectiles(float deltaTime)
+{
+    for(auto& projectile : m_EnemyProjectiles)
+    {
+        projectile.Position += projectile.Velocity * deltaTime;
+
+        if(projectile.Position.y > HEIGHT + projectile.Size.y)
         {
             projectile.Destroyed = true;
         }

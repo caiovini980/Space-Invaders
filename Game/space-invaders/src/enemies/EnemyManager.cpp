@@ -1,17 +1,28 @@
 #include "EnemyManager.h"
 
-#include "../LevelDefinition.h"
-#include "../ResourceManager.h"
+#include <iostream>
 
-EnemyManager::EnemyManager(unsigned levelWidth, unsigned levelHeight, const LevelDefinition& levelDefinition)
-    : m_LevelWidth(levelWidth), m_LevelHeight(levelHeight)
+#include "LevelDefinition.h"
+#include "ResourceManager.h"
+#include "interfaces/IProjectileHandler.h"
+#include "utils/GameTime.h"
+
+EnemyManager::EnemyManager(unsigned levelWidth, unsigned levelHeight, const LevelDefinition& levelDefinition, IProjectileHandler& projectileHandler)
+    : m_LevelWidth(levelWidth), m_LevelHeight(levelHeight), m_ProjectileHandler(projectileHandler)
 {
     SpawnEnemies(levelDefinition);
+
+    m_ProjectileSprite = ResourceManager::GetTexture("Projectile");
 }
 
 void EnemyManager::Update(float deltaTime)
 {
     MoveEnemies(deltaTime);
+
+    if(CanShoot())
+    {
+        Shoot();
+    }
 }
 
 void EnemyManager::MoveEnemies(float deltaTime)
@@ -46,9 +57,55 @@ void EnemyManager::MoveEnemiesDownwards()
     }
 }
 
+bool EnemyManager::CanShoot() const
+{
+    return GameTime::Time - m_LastShootTime >= SHOOT_SECONDS_COOLDOWN;
+}
+
+void EnemyManager::Shoot()
+{
+    m_LastShootTime = GameTime::Time;
+
+    int randomEnemyIndex = GetRandomAliveEnemyIndex();
+
+    if(randomEnemyIndex == -1)
+    {
+        std::cout << "ENEMY::ERROR: Could not found a enemy to shoot from!\n";
+        return;
+    }
+
+    const GameObject& enemy = m_Enemies[randomEnemyIndex];
+    
+    glm::vec2 shootOrigin{enemy.Position.x + enemy.Size.x / 2.f, enemy.Position.y + enemy.Size.y};
+    GameObject projectile{shootOrigin, PROJECTILE_SIZE, m_ProjectileSprite, PROJECTILE_COLOR, SHOOT_VELOCITY};
+    projectile.Rotation = 180.f;
+
+    m_ProjectileHandler.AddEnemyProjectile(std::move(projectile));
+}
+
+int EnemyManager::GetRandomAliveEnemyIndex() const
+{
+    constexpr int maxAttempts = 1000;
+    int i = 0;
+
+    while(i < maxAttempts)
+    {
+        int randomIndex = rand() % m_Enemies.size();
+
+        if(!m_Enemies[randomIndex].Destroyed)
+        {
+            return randomIndex;
+        }
+
+        i++;
+    }
+    
+    return -1;
+}
+
 void EnemyManager::Render(const SpriteRenderer& renderer)
 {
-    for (const GameObject& enemy : m_Enemies)
+    for(const GameObject& enemy : m_Enemies)
     {
         enemy.Draw(renderer);
     }
