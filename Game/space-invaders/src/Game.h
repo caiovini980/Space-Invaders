@@ -18,8 +18,9 @@ public:
     ~Game();
     
     void Init();
-    void UpdatePlayerProjectiles(float deltaTime);
     void Update(float deltaTime);
+    void UpdatePlayerProjectiles(float deltaTime);
+    void UpdateEnemyProjectiles(float deltaTime);
     void ProcessInput(float deltaTime, const Input& input);
     void RenderProjectiles() const;
     void Render();

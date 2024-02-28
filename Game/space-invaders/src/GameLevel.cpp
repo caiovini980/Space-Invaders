@@ -3,7 +3,7 @@
 #include "LevelDefinition.h"
 
 
-GameLevel::GameLevel(unsigned int width, unsigned int height)
+GameLevel::GameLevel(unsigned int width, unsigned int height, IProjectileHandler& projectileHandler)
 {
     LevelDefinition levelDefinition{};
     levelDefinition.TotalEnemyColumns = 11;
@@ -13,7 +13,7 @@ GameLevel::GameLevel(unsigned int width, unsigned int height)
     levelDefinition.TopMargin = 50.f;
     levelDefinition.MinBottomMargin = 150.f;
     
-    m_EnemyManager = std::make_unique<EnemyManager>(width, height, levelDefinition);
+    m_EnemyManager = std::make_unique<EnemyManager>(width, height, levelDefinition, projectileHandler);
 }
 
 void GameLevel::Update(float deltaTime)
