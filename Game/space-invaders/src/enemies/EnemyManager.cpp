@@ -1,17 +1,29 @@
 #include "EnemyManager.h"
 
+#include <iostream>
+
 #include "LevelDefinition.h"
 #include "ResourceManager.h"
+#include "utils/GameTime.h"
 
 EnemyManager::EnemyManager(unsigned levelWidth, unsigned levelHeight, const LevelDefinition& levelDefinition)
     : m_LevelWidth(levelWidth), m_LevelHeight(levelHeight)
 {
     SpawnEnemies(levelDefinition);
+
+    m_ProjectileSprite = ResourceManager::LoadTexture("res/textures/awesomeface.png", "ProjectilePlaceholder", true);
 }
 
 void EnemyManager::Update(float deltaTime)
 {
     MoveEnemies(deltaTime);
+
+    if(CanShoot())
+    {
+        Shoot();
+    }
+
+    MoveProjectiles(deltaTime);
 }
 
 void EnemyManager::MoveEnemies(float deltaTime)
@@ -46,11 +58,87 @@ void EnemyManager::MoveEnemiesDownwards()
     }
 }
 
+bool EnemyManager::CanShoot() const
+{
+    return GameTime::Time - m_LastShootTime >= SHOOT_SECONDS_COOLDOWN;
+}
+
+void EnemyManager::Shoot()
+{
+    m_LastShootTime = GameTime::Time;
+
+    int randomEnemyIndex = GetRandomAliveEnemyIndex();
+
+    if(randomEnemyIndex == -1)
+    {
+        std::cout << "ENEMY::ERROR: Could not found a enemy to shoot from!\n";
+        return;
+    }
+
+    const GameObject& enemy = m_Enemies[randomEnemyIndex];
+    
+    glm::vec2 shootOrigin{enemy.Position.x + enemy.Size.x / 2.f, enemy.Position.y + enemy.Size.y};
+    GameObject projectile{shootOrigin, PROJECTILE_SIZE, m_ProjectileSprite, PROJECTILE_COLOR, SHOOT_VELOCITY};
+    
+    m_Projectiles.emplace_back(std::move(projectile));
+}
+
+int EnemyManager::GetRandomAliveEnemyIndex() const
+{
+    constexpr int maxAttempts = 1000;
+    int i = 0;
+
+    while(i < maxAttempts)
+    {
+        int randomIndex = rand() % m_Enemies.size();
+
+        if(!m_Enemies[randomIndex].Destroyed)
+        {
+            return randomIndex;
+        }
+
+        i++;
+    }
+    
+    return -1;
+}
+
+void EnemyManager::MoveProjectiles(float deltaTime)
+{
+    for(GameObject& projectile : m_Projectiles)
+    {
+        projectile.Position += projectile.Velocity * deltaTime;
+
+        if(projectile.Position.y > m_LevelHeight + projectile.Size.y)
+        {
+            projectile.Destroyed = true;
+        }
+    }
+
+    auto it = m_Projectiles.begin();
+    while (it != m_Projectiles.end())
+    {
+        if(it->Destroyed)
+        {
+            it = m_Projectiles.erase(it);
+        }
+        else
+        {
+            ++it;
+        }
+    }
+}
+
 void EnemyManager::Render(const SpriteRenderer& renderer)
 {
-    for (const GameObject& enemy : m_Enemies)
+    for(const GameObject& enemy : m_Enemies)
     {
         enemy.Draw(renderer);
+    }
+
+    for(const GameObject& projectile : m_Projectiles)
+    {
+        projectile.Draw(renderer);
     }
 }
 
