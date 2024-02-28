@@ -4,6 +4,7 @@
 #include "Input.h"
 #include "PlayerManager.h"
 
+class GameLevel;
 class Texture;
 class SpriteRenderer;
 class Shader;
@@ -23,7 +24,8 @@ public:
 private:
     const float WIDTH = 800.0f;
     const float HEIGHT = 600.0f;
-    
+
     std::unique_ptr<SpriteRenderer> m_SpriteRenderer;
+    std::unique_ptr<GameLevel> m_Level;
     std::unique_ptr<PlayerManager> m_PlayerManager;
 };

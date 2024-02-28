@@ -3,6 +3,7 @@
 #include <iostream>
 #include <memory>
 
+#include "GameLevel.h"
 #include "ResourceManager.h"
 #include "SpriteRenderer.h"
 #include "PlayerManager.h"
@@ -25,6 +26,8 @@ void Game::Init()
     spriteShader->SetUniform1i("u_Image", 0);
     
     m_SpriteRenderer = std::make_unique<SpriteRenderer>(spriteShader);
+
+    m_Level = std::make_unique<GameLevel>(800, 600);
     
     // Create Player
     m_PlayerManager = std::make_unique<PlayerManager>();
@@ -33,7 +36,7 @@ void Game::Init()
 
 void Game::Update(float deltaTime)
 {
-    // std::cout << "Game running\n";
+    m_Level->Update(deltaTime);
 }
 
 void Game::ProcessInput(float deltaTime, const Input& input)
@@ -44,6 +47,8 @@ void Game::ProcessInput(float deltaTime, const Input& input)
 
 void Game::Render()
 {
+    m_Level->Render(*m_SpriteRenderer);
+
     // Render Player
     m_PlayerManager->Render(*m_SpriteRenderer);
 }
