@@ -10,7 +10,41 @@ EnemyManager::EnemyManager(unsigned levelWidth, unsigned levelHeight, const Leve
 }
 
 void EnemyManager::Update(float deltaTime)
-{ }
+{
+    MoveEnemies(deltaTime);
+}
+
+void EnemyManager::MoveEnemies(float deltaTime)
+{
+    bool bHasHitWall = false;
+
+    for(GameObject& enemy : m_Enemies)
+    {
+        enemy.Position += m_MovementVelocity * m_MovementDirection * deltaTime;
+
+        if(enemy.Position.x <= 0.f || enemy.Position.x + m_EnemySize.x >= m_LevelWidth)
+        {
+            bHasHitWall = true;
+        }
+    }
+
+    if(!bHasHitWall)
+    {
+        return;
+    }
+
+    m_MovementDirection.x = -m_MovementDirection.x;
+
+    MoveEnemiesDownwards();
+}
+
+void EnemyManager::MoveEnemiesDownwards()
+{
+    for(GameObject& enemy : m_Enemies)
+    {
+        enemy.Position.y += m_EnemySize.y / 2.f;
+    }
+}
 
 void EnemyManager::Render(const SpriteRenderer& renderer)
 {
@@ -24,9 +58,9 @@ void EnemyManager::SpawnEnemies(const LevelDefinition& level)
 {
     std::shared_ptr<Texture> enemySprite = ResourceManager::LoadTexture("res/textures/enemy.png", "Enemy", true);
     
-    glm::vec2 enemySize = CalculateEnemySize(level);
+    m_EnemySize = CalculateEnemySize(level);
     
-    float rowWidth = enemySize.x * level.TotalEnemyColumns + level.Padding * level.TotalEnemyColumns;
+    float rowWidth = m_EnemySize.x * level.TotalEnemyColumns + level.Padding * level.TotalEnemyColumns;
     glm::vec2 startPosition = {m_LevelWidth / 2.f - rowWidth / 2.f , level.TopMargin};
 
     std::vector<glm::vec3> colorMapping{
@@ -44,10 +78,10 @@ void EnemyManager::SpawnEnemies(const LevelDefinition& level)
         for(unsigned int x = 0; x < level.TotalEnemyColumns; x++)
         {
             glm::vec2 position = startPosition;
-            position.x += (level.Padding + enemySize.x) * x;
-            position.y += (level.Padding + enemySize.y) * y;
+            position.x += (level.Padding + m_EnemySize.x) * x;
+            position.y += (level.Padding + m_EnemySize.y) * y;
             
-            m_Enemies.emplace_back(position, enemySize, enemySprite, colorMapping[colorIndex]);
+            m_Enemies.emplace_back(position, m_EnemySize, enemySprite, colorMapping[colorIndex]);
         }
 
         if(y % rowsPerColor == 0)
