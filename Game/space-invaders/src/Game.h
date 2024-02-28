@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include <memory>
 
+class GameLevel;
 class Texture;
 class SpriteRenderer;
 class Shader;
@@ -20,4 +21,5 @@ public:
 private:
 
     std::unique_ptr<SpriteRenderer> m_SpriteRenderer;
+    std::unique_ptr<GameLevel> m_Level;
 };

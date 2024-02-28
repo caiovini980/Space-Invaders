@@ -3,6 +3,7 @@
 #include <iostream>
 #include <memory>
 
+#include "GameLevel.h"
 #include "ResourceManager.h"
 #include "SpriteRenderer.h"
 #include "glm/ext/matrix_clip_space.hpp"
@@ -22,14 +23,16 @@ void Game::Init()
     spriteShader->SetUniformMat4f("u_Projection", ortho);
     spriteShader->SetUniform1i("u_Image", 0);
     
-    ResourceManager::LoadTexture("res/textures/awesomeface.png", "Face", true);
-    
     m_SpriteRenderer = std::make_unique<SpriteRenderer>(spriteShader);
+
+    m_Level = std::make_unique<GameLevel>(800, 600);
 }
 
 void Game::Update(float deltaTime)
 {
     std::cout << "Game running\n";
+
+    m_Level->Update(deltaTime);
 }
 
 void Game::ProcessInput(float deltaTime)
@@ -39,9 +42,7 @@ void Game::ProcessInput(float deltaTime)
 
 void Game::Render()
 {
-    std::cout << "Game rendering\n";
-
-    m_SpriteRenderer->Draw(*ResourceManager::GetTexture("Face"), {200.f, 200.f}, {100.f, 100.f});
+    m_Level->Render(*m_SpriteRenderer);
 }
 
 void Game::Close()

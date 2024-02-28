@@ -100,7 +100,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>GLEW_STATIC;WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>src\core;src\vendor;$(SolutionDir)dependencies\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;src\core;src\vendor;$(SolutionDir)dependencies\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -117,7 +117,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>GLEW_STATIC;WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>src\core;src\vendor;$(SolutionDir)dependencies\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;src\core;src\vendor;$(SolutionDir)dependencies\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -134,7 +134,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>GLEW_STATIC;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>src\core;src\vendor;$(SolutionDir)dependencies\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;src\core;src\vendor;$(SolutionDir)dependencies\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -151,7 +151,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>GLEW_STATIC;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>src\core;src\vendor;$(SolutionDir)dependencies\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>src;src\core;src\vendor;$(SolutionDir)dependencies\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -172,7 +172,9 @@
     <ClCompile Include="src\core\VertexArray.cpp" />
     <ClCompile Include="src\core\VertexBuffer.cpp" />
     <ClCompile Include="src\core\VertexBufferLayout.cpp" />
+    <ClCompile Include="src\enemies\EnemyManager.cpp" />
     <ClCompile Include="src\Game.cpp" />
+    <ClCompile Include="src\GameLevel.cpp" />
     <ClCompile Include="src\GameObject.cpp" />
     <ClCompile Include="src\ResourceManager.cpp" />
     <ClCompile Include="src\vendor\glm\detail\glm.cpp" />
@@ -188,8 +190,11 @@
     <ClInclude Include="src\core\VertexArray.h" />
     <ClInclude Include="src\core\VertexBuffer.h" />
     <ClInclude Include="src\core\VertexBufferLayout.h" />
+    <ClInclude Include="src\enemies\EnemyManager.h" />
     <ClInclude Include="src\Game.h" />
+    <ClInclude Include="src\GameLevel.h" />
     <ClInclude Include="src\GameObject.h" />
+    <ClInclude Include="src\LevelDefinition.h" />
     <ClInclude Include="src\ResourceManager.h" />
     <ClInclude Include="src\vendor\glm\common.hpp" />
     <ClInclude Include="src\vendor\glm\detail\compute_common.hpp" />
