@@ -3,6 +3,7 @@
 #include <iostream>
 
 #include "Input.h"
+#include "utils/GameTime.h"
 
 int main(int argc, char* argv[])
 {
@@ -61,6 +62,10 @@ int main(int argc, char* argv[])
         const float currentFrame = static_cast<float>(glfwGetTime());
         deltaTime = currentFrame - lastFrame;
         lastFrame = currentFrame;
+
+        // Update GameTime class
+        GameTime::Time = currentFrame;
+        GameTime::DeltaTime = deltaTime;
 
         GLCall(glClearColor(0.0f, 0.0f, 0.0f, 1.0f));
         GLCall(glClear(GL_COLOR_BUFFER_BIT));
