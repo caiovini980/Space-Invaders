@@ -132,7 +132,7 @@ void Game::UpdateEnemyProjectiles(float deltaTime)
     }
 }
 
-void Game::CheckEnemyCollisions(std::vector<GameObject>::value_type& projectile)
+void Game::CheckEnemyCollisions(GameObject& projectile)
 {
     for (auto& enemy : m_Level->GetEnemies())
     {
