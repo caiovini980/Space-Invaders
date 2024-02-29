@@ -13,6 +13,10 @@ EnemyManager::EnemyManager(unsigned levelWidth, unsigned levelHeight, const Leve
     SpawnEnemies(levelDefinition);
 
     m_ProjectileSprite = ResourceManager::GetTexture("Projectile");
+
+    m_TotalEnemies = static_cast<int>(m_Enemies.size());
+    m_MovementVelocity = INITIAL_MOVEMENT_VELOCITY * MOVEMENT_VELOCITY_MULTIPLIER_CURVE[0];
+    m_ShootSecondsCooldown = SHOOT_SECONDS_COOLDOWN_CURVE[0];
 }
 
 void EnemyManager::Update(float deltaTime)
@@ -67,7 +71,7 @@ void EnemyManager::MoveEnemiesDownwards()
 
 bool EnemyManager::CanShoot() const
 {
-    return GameTime::Time - m_LastShootTime >= SHOOT_SECONDS_COOLDOWN;
+    return GameTime::Time - m_LastShootTime >= m_ShootSecondsCooldown;
 }
 
 void EnemyManager::Shoot()
@@ -123,6 +127,31 @@ void EnemyManager::Render(const SpriteRenderer& renderer)
 void EnemyManager::HandleEnemyHit(GameObject& enemy)
 {
     enemy.Destroyed = true;
+    m_TotalEnemiesKilled++;
+
+    IncreaseDifficulty();
+}
+
+void EnemyManager::IncreaseDifficulty()
+{
+    unsigned int nextDifficultyIndex = m_CurrentDifficultyIndex + 1;
+
+    if(nextDifficultyIndex == TOTAL_DIFFICULTY_CURVE_POINTS)
+    {
+        return;
+    }
+
+    float killedEnemiesCompletion = static_cast<float>(m_TotalEnemiesKilled) / static_cast<float>(m_TotalEnemies);
+
+    if(killedEnemiesCompletion < DIFFICULTY_CURVE_POINTS[nextDifficultyIndex])
+    {
+        return;
+    }
+
+    m_CurrentDifficultyIndex = nextDifficultyIndex;
+
+    m_ShootSecondsCooldown = SHOOT_SECONDS_COOLDOWN_CURVE[m_CurrentDifficultyIndex];
+    m_MovementVelocity = INITIAL_MOVEMENT_VELOCITY * MOVEMENT_VELOCITY_MULTIPLIER_CURVE[m_CurrentDifficultyIndex];
 }
 
 void EnemyManager::SpawnEnemies(const LevelDefinition& level)
