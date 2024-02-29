@@ -28,5 +28,5 @@ void GameLevel::Render(const SpriteRenderer& renderer)
 
 void GameLevel::HandleEnemyHit(GameObject& enemy)
 {
-    enemy.Destroyed = true;
+    m_EnemyManager->HandleEnemyHit(enemy);
 }

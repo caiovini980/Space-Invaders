@@ -31,6 +31,11 @@ void EnemyManager::MoveEnemies(float deltaTime)
 
     for(GameObject& enemy : m_Enemies)
     {
+        if(enemy.Destroyed)
+        {
+            continue;
+        }
+        
         enemy.Position += m_MovementVelocity * m_MovementDirection * deltaTime;
 
         bool bIsCrossingLeftBound = m_MovementDirection.x < 0.f && enemy.Position.x <= 0.f;
@@ -113,6 +118,11 @@ void EnemyManager::Render(const SpriteRenderer& renderer)
         if (enemy.Destroyed) continue;
         enemy.Draw(renderer);
     }
+}
+
+void EnemyManager::HandleEnemyHit(GameObject& enemy)
+{
+    enemy.Destroyed = true;
 }
 
 void EnemyManager::SpawnEnemies(const LevelDefinition& level)
