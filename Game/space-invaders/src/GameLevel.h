@@ -16,7 +16,7 @@ public:
     void Render(const SpriteRenderer& renderer);
 
     std::vector<GameObject>& GetEnemies() const { return m_EnemyManager->GetEnemies(); }
-    void CheckCollisionWithEnemies(GameObject& projectile, GameObject& object);
+    void CheckCollisionWithEnemies(GameObject& projectile);
 
 private:
 

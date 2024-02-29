@@ -16,7 +16,7 @@ public:
     
     void Update(float deltaTime);
     void Render(const SpriteRenderer& renderer);
-    void CheckCollisions(GameObject& projectile, GameObject& hitObject);
+    void CheckCollisions(GameObject& projectile);
 
     std::vector<GameObject>& GetEnemies() { return m_Enemies; }
     

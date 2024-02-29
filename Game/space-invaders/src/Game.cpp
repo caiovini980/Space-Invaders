@@ -102,11 +102,7 @@ void Game::UpdatePlayerProjectiles(float deltaTime)
             projectile.Destroyed = true;
         }
         
-        // check collision with enemies or block
-        for (auto& enemy : m_Level->GetEnemies())
-        {
-            m_PlayerManager->CheckCollisions(projectile, enemy);
-        }
+        m_Level->CheckCollisionWithEnemies(projectile);
     }
 }
 
@@ -120,10 +116,8 @@ void Game::UpdateEnemyProjectiles(float deltaTime)
         {
             projectile.Destroyed = true;
         }
-
-        GameObject& player = m_PlayerManager->GetPlayer();
         
-        m_Level->CheckCollisionWithEnemies(projectile, player);
+        m_PlayerManager->CheckCollisions(projectile);
     }
 }
 

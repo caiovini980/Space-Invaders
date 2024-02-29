@@ -152,15 +152,17 @@ void EnemyManager::SpawnEnemies(const LevelDefinition& level)
     }
 }
 
-void EnemyManager::CheckCollisions(GameObject& projectile, GameObject& hitObject)
+void EnemyManager::CheckCollisions(GameObject& projectile)
 {
-    if (Collision::IsColliding(projectile, hitObject) && hitObject.bIsPlayer)
+    for (auto& enemy : m_Enemies)
     {
-        if (!hitObject.Destroyed)
+        if (Collision::IsColliding(projectile, enemy))
         {
+            if (enemy.Destroyed) { continue; }
+
             std::cout << "Hit Player!\n";
             projectile.Destroyed = true;
-            hitObject.Destroyed = true;
+            enemy.Destroyed = true;
         }
     }
 }
