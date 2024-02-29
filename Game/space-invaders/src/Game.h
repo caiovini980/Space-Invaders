@@ -22,17 +22,19 @@ public:
     ~Game();
     
     void Init();
+    bool HasGameEnded();
+    void HandleGameLost();
     void Update(float deltaTime);
     void UpdatePlayerProjectiles(float deltaTime);
     void UpdateEnemyProjectiles(float deltaTime);
-    void ProcessInput(float deltaTime, const Input& input);
+    void ProcessInput(float deltaTime, const Input& input) const;
     void RenderProjectiles() const;
     void Render();
     void Close();
 
     void AddEnemyProjectile(GameObject&& projectile) override;
     void AddPlayerProjectile(GameObject&& projectile) override;
-    void CheckEnemyCollisions(GameObject& projectile);
+    void CheckEnemyCollisions(GameObject& projectile) const;
 
 private:
     const float WIDTH = 800.0f;

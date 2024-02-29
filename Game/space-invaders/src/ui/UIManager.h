@@ -1,7 +1,11 @@
 #pragma once
 #include <memory>
 
+#include "GameObject.h"
 #include "TextRenderer.h"
+#include "Texture.h"
+
+class SpriteRenderer;
 
 class UIManager
 {
@@ -11,11 +15,14 @@ public:
 
     void RenderInGameScreen(unsigned int playerLives) const;
     void RenderGameWinScreen() const;
-    void RenderGameOverScreen() const;
+    void RenderGameOverScreen(const SpriteRenderer& renderer) const;
 
 private:
 
     unsigned int m_ScreenWidth{0};
     unsigned int m_ScreenHeight{0};
     std::unique_ptr<TextRenderer> m_TextRenderer;
+
+    GameObject m_GameEndedGUIBackground;
+    std::shared_ptr<Texture> m_GameEndedGUIBackgroundSprite;
 };
