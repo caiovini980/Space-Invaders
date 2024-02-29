@@ -2,6 +2,7 @@
 
 #include <iostream>
 
+#include "Audio.h"
 #include "Input.h"
 #include "utils/GameTime.h"
 
@@ -48,6 +49,7 @@ int main(int argc, char* argv[])
 
     // initialize game
     // ---------------
+    Audio::Init();
     m_SpaceInvaders->Init();
 
     // deltaTime variables
