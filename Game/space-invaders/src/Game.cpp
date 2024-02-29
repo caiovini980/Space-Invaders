@@ -98,21 +98,23 @@ void Game::UpdatePlayerProjectiles(float deltaTime)
 {
     for (auto& projectile : m_PlayerProjectiles)
     {
-        // update position
         projectile.Position.y -= projectile.Velocity.y * deltaTime;
         
-        // check boundaries
         if (projectile.Position.y <= 0)
         {
             projectile.Destroyed = true;
         }
-
-        CheckEnemyCollisions(projectile);
+        else
+        {
+            CheckEnemyCollisions(projectile);
+        }
     }
 }
 
 void Game::UpdateEnemyProjectiles(float deltaTime)
 {
+    GameObject& player = m_PlayerManager->GetPlayer();
+
     for(auto& projectile : m_EnemyProjectiles)
     {
         projectile.Position += projectile.Velocity * deltaTime;
@@ -122,10 +124,8 @@ void Game::UpdateEnemyProjectiles(float deltaTime)
             projectile.Destroyed = true;
         }
 
-        GameObject& player = m_PlayerManager->GetPlayer();
-        
-        if (player.Destroyed) { return; }
-        if (!Collision::IsColliding(projectile, player)) { return; }
+        if (player.Destroyed) { continue; }
+        if (!Collision::IsColliding(projectile, player)) { continue; }
 
         projectile.Destroyed = true;
         m_PlayerManager->HandlePlayerHit();
