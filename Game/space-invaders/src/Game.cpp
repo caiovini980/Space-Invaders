@@ -9,6 +9,7 @@
 #include "SpriteRenderer.h"
 #include "players/PlayerManager.h"
 #include "Collision.h"
+#include "background/BackgroundManager.h"
 
 #include "glm/ext/matrix_clip_space.hpp"
 #include "ui/UIManager.h"
@@ -21,7 +22,6 @@ void Game::Init()
 {
     std::cout << "Game starting...\n";
 
-    // Load shaders
     std::shared_ptr<Shader> spriteShader = ResourceManager::LoadShader("res/shaders/Sprite.vertex",
         "res/shaders/Sprite.frag", "Test");
 
@@ -32,12 +32,12 @@ void Game::Init()
     
     m_SpriteRenderer = std::make_unique<SpriteRenderer>(spriteShader);
     
-    // Create Player
     m_PlayerManager = std::make_unique<PlayerManager>(*this);
     m_PlayerManager->CreatePlayer(WIDTH, HEIGHT);
-
+    
     m_Level = std::make_unique<GameLevel>(WIDTH, HEIGHT, *this);
-
+    m_BackgroundManager = std::make_unique<BackgroundManager>(WIDTH, HEIGHT);
+    
     m_UIManager = std::make_unique<UIManager>(WIDTH, HEIGHT);
 }
 
@@ -45,11 +45,7 @@ void Game::Update(float deltaTime)
 {
     if(m_CurrentState == EGameState::Playing)
     {
-        if(m_Level->IsEveryEnemyKilled())
-        {
-            HandleGameWon();
-            return;
-        }
+        if (HasGameEnded()) return;
 
         UpdatePlayerProjectiles(deltaTime);
         UpdateEnemyProjectiles(deltaTime);
@@ -62,16 +58,19 @@ void Game::Update(float deltaTime)
     }
 }
 
-void Game::ProcessInput(float deltaTime, const Input& input)
+void Game::ProcessInput(float deltaTime, const Input& input) const
 {
-    m_PlayerManager->ProcessInput(deltaTime, input, WIDTH);
-
     if(m_CurrentState == EGameState::GameWin || m_CurrentState == EGameState::GameOver)
     {
         if(input.GetKey(GLFW_KEY_R))
         {
             Restart();
         }
+    }
+
+    if (m_CurrentState == EGameState::Playing || m_CurrentState == EGameState::GameWin)
+    {
+        m_PlayerManager->ProcessInput(deltaTime, input, WIDTH);
     }
 }
 
@@ -90,6 +89,7 @@ void Game::RenderProjectiles() const
 
 void Game::Render()
 {
+    m_BackgroundManager->Render(*m_SpriteRenderer);
     m_Level->Render(*m_SpriteRenderer);
     m_PlayerManager->Render(*m_SpriteRenderer);
     
@@ -98,18 +98,20 @@ void Game::Render()
 
     if(m_CurrentState == EGameState::Playing)
     {
-        m_UIManager->RenderInGameScreen();
+        m_UIManager->RenderInGameScreen(m_PlayerManager->GetPlayerCurrentLives());
     }
     else if(m_CurrentState == EGameState::GameWin)
     {
         m_UIManager->RenderGameWinScreen();
     }
+    else if (m_CurrentState == EGameState::GameOver)
+    {
+        m_UIManager->RenderGameOverScreen(*m_SpriteRenderer);
+    }
 }
 
 void Game::Close()
 {
-    std::cout << "Closing game...\n";
-
     ResourceManager::ClearAll();
 }
 
@@ -161,7 +163,7 @@ void Game::UpdateEnemyProjectiles(float deltaTime)
     }
 }
 
-void Game::CheckEnemyCollisions(GameObject& projectile)
+void Game::CheckEnemyCollisions(GameObject& projectile) const
 {
     for (auto& enemy : m_Level->GetEnemies())
     {
@@ -179,6 +181,29 @@ void Game::HandleGameWon()
 {
     m_CurrentState = EGameState::GameWin;
     m_EnemyProjectiles.clear();
+}
+
+void Game::HandleGameLost()
+{
+    m_CurrentState = EGameState::GameOver;
+    m_PlayerProjectiles.clear();
+}
+
+bool Game::HasGameEnded()
+{
+    if(m_Level->IsEveryEnemyKilled())
+    {
+        HandleGameWon();
+        return true;
+    }
+
+    if(m_PlayerManager->GetPlayer().Destroyed)
+    {
+        HandleGameLost();
+        return true;
+    }
+
+    return false;
 }
 
 void Game::Restart()

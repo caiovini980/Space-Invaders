@@ -165,6 +165,7 @@
   <ItemGroup>
     <ClCompile Include="src\Application.cpp" />
     <ClCompile Include="src\Audio.cpp" />
+    <ClCompile Include="src\background\BackgroundManager.cpp" />
     <ClCompile Include="src\core\Core.cpp" />
     <ClCompile Include="src\core\IndexBuffer.cpp" />
     <ClCompile Include="src\core\Shader.cpp" />
@@ -190,6 +191,7 @@
   <ItemGroup>
     <ClInclude Include="src\Application.h" />
     <ClInclude Include="src\Audio.h" />
+    <ClInclude Include="src\background\BackgroundManager.h" />
     <ClInclude Include="src\Collision.h" />
     <ClInclude Include="src\core\Core.h" />
     <ClInclude Include="src\core\IndexBuffer.h" />
@@ -650,6 +652,9 @@
     <Content Include="res\shaders\Text.vertex" />
     <Content Include="res\shaders\TextBlink.frag" />
     <Content Include="res\textures\awesomeface.png" />
+    <Content Include="res\textures\background.png" />
+    <Content Include="res\textures\block.png" />
+    <Content Include="res\textures\endgameGuiBackground.png" />
     <Content Include="res\textures\enemy.png" />
     <Content Include="res\textures\projectile.png" />
     <Content Include="res\textures\ship.png" />
