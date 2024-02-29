@@ -1,7 +1,5 @@
 #include "UIManager.h"
 
-#include <sstream>
-
 #include "ResourceManager.h"
 #include "Shader.h"
 
@@ -14,10 +12,7 @@ UIManager::UIManager(unsigned screenWidth, unsigned screenHeight)
 
 void UIManager::RenderInGameScreen(unsigned int playerLives) const
 {
-    std::stringstream stringStream;
-    stringStream << playerLives;
-    
-    m_TextRenderer->RenderText("LIVES: " + stringStream.str(), 20.f, 20.f, 1.f, glm::vec3{1.f});
+    m_TextRenderer->RenderText("LIVES: " + std::to_string(playerLives), 20.f, 20.f, 1.f, glm::vec3{1.f});
 }
 
 void UIManager::RenderGameWinScreen() const
