@@ -35,7 +35,7 @@ void Game::Init()
     m_PlayerManager = std::make_unique<PlayerManager>(*this);
     m_PlayerManager->CreatePlayer(WIDTH, HEIGHT);
 
-    m_Level = std::make_unique<GameLevel>(800, 600, *this);
+    m_Level = std::make_unique<GameLevel>(WIDTH, HEIGHT, *this);
 
     m_UIManager = std::make_unique<UIManager>(WIDTH, HEIGHT);
 }
