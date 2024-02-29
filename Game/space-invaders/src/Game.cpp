@@ -58,7 +58,7 @@ void Game::Update(float deltaTime)
     }
 }
 
-void Game::ProcessInput(float deltaTime, const Input& input) const
+void Game::ProcessInput(float deltaTime, const Input& input)
 {
     if(m_CurrentState == EGameState::GameWin || m_CurrentState == EGameState::GameOver)
     {

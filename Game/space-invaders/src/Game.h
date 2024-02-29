@@ -27,7 +27,7 @@ public:
     void Update(float deltaTime);
     void UpdatePlayerProjectiles(float deltaTime);
     void UpdateEnemyProjectiles(float deltaTime);
-    void ProcessInput(float deltaTime, const Input& input) const;
+    void ProcessInput(float deltaTime, const Input& input);
     void RenderProjectiles() const;
     void Render();
     void Close();
