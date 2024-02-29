@@ -66,8 +66,6 @@ void PlayerManager::ProcessInput(float deltaTime, const Input& input, float boun
     {
         if (CheckIfCanShootAgain())
         {
-            std::cout << "SHOT!!\n";
-            
             CreateProjectile();
             m_LastShotTime = GameTime::Time;
         }

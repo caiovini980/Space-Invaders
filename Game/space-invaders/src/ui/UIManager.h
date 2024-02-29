@@ -10,6 +10,7 @@ public:
     UIManager(unsigned int screenWidth, unsigned int screenHeight);
 
     void RenderInGameScreen();
+    void RenderGameWinScreen();
 
 private:
 

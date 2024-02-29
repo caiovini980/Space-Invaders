@@ -34,7 +34,7 @@ private:
     const glm::vec3 PLAYER_COLOR = glm::vec3(0.5f, 1.0f, 0.5f);
 
     const float PLAYER_SPEED = 500.0f;
-    const float SHOT_COOLDOWN = 1.0f;
+    const float SHOT_COOLDOWN = 0.5f;
 
     const int PLAYER_INITIAL_LIVES = 3;
     
