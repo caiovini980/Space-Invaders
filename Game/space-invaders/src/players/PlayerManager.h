@@ -5,8 +5,8 @@
 
 #include "glm/glm.hpp"
 
-#include "../Input.h"
 #include "../core/SpriteRenderer.h"
+#include "../Input.h"
 #include "../interfaces/IProjectileHandler.h"
 
 class PlayerManager
@@ -19,6 +19,9 @@ public:
     void CreateProjectile();
     void ProcessInput(float deltaTime, const Input& input, float boundsWidth);
     void Render(const SpriteRenderer& renderer) const;
+    void HandlePlayerHit();
+
+    GameObject& GetPlayer() const { return *m_Player; }
 
 private:
     IProjectileHandler& m_ProjectileHandler;
@@ -32,6 +35,8 @@ private:
 
     const float PLAYER_SPEED = 500.0f;
     const float SHOT_COOLDOWN = 1.0f;
+
+    const int PLAYER_INITIAL_LIVES = 3;
     
     std::shared_ptr<GameObject> m_Player;
     std::shared_ptr<Texture> m_PlayerSprite;
@@ -40,4 +45,7 @@ private:
     glm::vec2 m_ShotPosition;
     
     float m_LastShotTime = 0.0f;
+
+    
+    int m_PlayerCurrentLives = 3;
 };

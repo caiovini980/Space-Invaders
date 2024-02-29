@@ -4,7 +4,6 @@
 
 #include "Input.h"
 #include "interfaces/IProjectileHandler.h"
-#include "players/PlayerManager.h"
 
 class UIManager;
 class TextRenderer;
@@ -12,6 +11,7 @@ class Texture;
 class SpriteRenderer;
 class Shader;
 class GameLevel;
+class PlayerManager;
 
 class Game : public IProjectileHandler
 {
@@ -30,6 +30,7 @@ public:
 
     void AddEnemyProjectile(GameObject&& projectile) override;
     void AddPlayerProjectile(GameObject&& projectile) override;
+    void CheckEnemyCollisions(std::vector<GameObject>::value_type& projectile);
 
 private:
     const float WIDTH = 800.0f;
@@ -38,9 +39,9 @@ private:
     std::vector<GameObject> m_EnemyProjectiles;
     std::vector<GameObject> m_PlayerProjectiles;
     
+    std::unique_ptr<PlayerManager> m_PlayerManager;
     std::unique_ptr<SpriteRenderer> m_SpriteRenderer;
     std::unique_ptr<GameLevel> m_Level;
-    std::unique_ptr<PlayerManager> m_PlayerManager;
     std::unique_ptr<UIManager> m_UIManager;
     
     void RemoveDestroyedProjectiles();

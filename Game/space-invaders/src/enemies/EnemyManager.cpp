@@ -110,6 +110,7 @@ void EnemyManager::Render(const SpriteRenderer& renderer)
 {
     for(const GameObject& enemy : m_Enemies)
     {
+        if (enemy.Destroyed) continue;
         enemy.Draw(renderer);
     }
 }
@@ -140,7 +141,7 @@ void EnemyManager::SpawnEnemies(const LevelDefinition& level)
             glm::vec2 position = startPosition;
             position.x += (level.Padding + m_EnemySize.x) * x;
             position.y += (level.Padding + m_EnemySize.y) * y;
-            
+
             m_Enemies.emplace_back(position, m_EnemySize, enemySprite, colorMapping[colorIndex]);
         }
 

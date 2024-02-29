@@ -7,6 +7,8 @@
 #include "ResourceManager.h"
 #include "SpriteRenderer.h"
 #include "players/PlayerManager.h"
+#include "Collision.h"
+
 #include "glm/ext/matrix_clip_space.hpp"
 #include "ui/UIManager.h"
 
@@ -19,7 +21,8 @@ void Game::Init()
     std::cout << "Game starting...\n";
 
     // Load shaders
-    std::shared_ptr<Shader> spriteShader = ResourceManager::LoadShader("res/shaders/Sprite.vertex", "res/shaders/Sprite.frag", "Test");
+    std::shared_ptr<Shader> spriteShader = ResourceManager::LoadShader("res/shaders/Sprite.vertex",
+        "res/shaders/Sprite.frag", "Test");
 
     spriteShader->Bind();
     glm::mat4 ortho = glm::ortho(0.f, WIDTH, HEIGHT, 0.f, -1.f, 1.f);
@@ -41,7 +44,7 @@ void Game::Update(float deltaTime)
 {
     UpdatePlayerProjectiles(deltaTime);
     UpdateEnemyProjectiles(deltaTime);
-
+    
     m_Level->Update(deltaTime);
 }
 
@@ -103,6 +106,8 @@ void Game::UpdatePlayerProjectiles(float deltaTime)
         {
             projectile.Destroyed = true;
         }
+
+        CheckEnemyCollisions(projectile);
     }
 }
 
@@ -116,6 +121,27 @@ void Game::UpdateEnemyProjectiles(float deltaTime)
         {
             projectile.Destroyed = true;
         }
+
+        GameObject& player = m_PlayerManager->GetPlayer();
+        
+        if (player.Destroyed) { return; }
+        if (!Collision::IsColliding(projectile, player)) { return; }
+
+        projectile.Destroyed = true;
+        m_PlayerManager->HandlePlayerHit();
+    }
+}
+
+void Game::CheckEnemyCollisions(std::vector<GameObject>::value_type& projectile)
+{
+    for (auto& enemy : m_Level->GetEnemies())
+    {
+        if (enemy.Destroyed) { continue; }
+        if (!Collision::IsColliding(projectile, enemy)) { continue; }
+
+        std::cout << "Hit Enemy!\n";
+        projectile.Destroyed = true;
+        m_Level->HandleEnemyHit(enemy);
     }
 }
 
