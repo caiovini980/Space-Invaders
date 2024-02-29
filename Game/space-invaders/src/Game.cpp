@@ -142,6 +142,8 @@ void Game::CheckEnemyCollisions(GameObject& projectile)
         std::cout << "Hit Enemy!\n";
         projectile.Destroyed = true;
         m_Level->HandleEnemyHit(enemy);
+
+        break;
     }
 }
 
