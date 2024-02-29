@@ -32,9 +32,9 @@ private:
     const float SHOOT_SECONDS_COOLDOWN_CURVE[TOTAL_DIFFICULTY_CURVE_POINTS] = {
         1.5f,
         1.f,
-        0.5f,
-        0.3f,
-        0.2f
+        0.8f,
+        0.6f,
+        0.4f
     };
     const float MOVEMENT_VELOCITY_MULTIPLIER_CURVE[TOTAL_DIFFICULTY_CURVE_POINTS] = {
         1.f,
