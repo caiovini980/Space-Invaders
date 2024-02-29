@@ -20,7 +20,7 @@ public:
     void CreateProjectile();
     void ProcessInput(float deltaTime, const Input& input, float boundsWidth);
     void Render(const SpriteRenderer& renderer) const;
-    void CheckCollisions(GameObject& projectile);
+    void HandlePlayerHit();
 
     GameObject& GetPlayer() const { return *m_Player; }
 

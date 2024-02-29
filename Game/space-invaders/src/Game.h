@@ -28,6 +28,7 @@ public:
 
     void AddEnemyProjectile(GameObject&& projectile) override;
     void AddPlayerProjectile(GameObject&& projectile) override;
+    void CheckEnemyCollisions(std::vector<GameObject>::value_type& projectile);
 
 private:
     const float WIDTH = 800.0f;

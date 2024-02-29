@@ -101,8 +101,8 @@ void Game::UpdatePlayerProjectiles(float deltaTime)
         {
             projectile.Destroyed = true;
         }
-        
-        m_Level->CheckCollisionWithEnemies(projectile);
+
+        CheckEnemyCollisions(projectile);
     }
 }
 
@@ -116,8 +116,26 @@ void Game::UpdateEnemyProjectiles(float deltaTime)
         {
             projectile.Destroyed = true;
         }
-        
-        m_PlayerManager->CheckCollisions(projectile);
+
+        GameObject& player = m_PlayerManager->GetPlayer();
+        if (!Collision::IsColliding(projectile, player)) { return; }
+        if (player.Destroyed) { return; }
+
+        projectile.Destroyed = true;
+        m_PlayerManager->HandlePlayerHit();
+    }
+}
+
+void Game::CheckEnemyCollisions(std::vector<GameObject>::value_type& projectile)
+{
+    for (auto& enemy : m_Level->GetEnemies())
+    {
+        if (!Collision::IsColliding(projectile, enemy)) { continue; }
+        if (enemy.Destroyed) { continue; }
+
+        std::cout << "Hit Enemy!\n";
+        projectile.Destroyed = true;
+        m_Level->HandleEnemyHit(enemy);
     }
 }
 

@@ -39,9 +39,7 @@ void PlayerManager::CreatePlayer(float screenWidth, float screenHeight)
         PLAYER_COLOR,
         glm::vec2(PLAYER_SPEED)
         );
-
-    m_Player->bIsPlayer = true;
-
+    
     m_PlayerCurrentLives = PLAYER_INITIAL_LIVES;
 }
 
@@ -110,12 +108,12 @@ void PlayerManager::Render(const SpriteRenderer& renderer) const
     renderer.Draw(*m_PlayerSprite, m_Player->Position, m_Player->Size, m_Player->Rotation, m_Player->Color);
 }
 
-void PlayerManager::CheckCollisions(GameObject& projectile)
+void PlayerManager::HandlePlayerHit()
 {
-    // check collisions with the player
-    if (!m_Player->Destroyed && Collision::IsColliding(projectile, *m_Player))
+    m_PlayerCurrentLives -= 1;
+
+    if (m_PlayerCurrentLives <= 0)
     {
-        projectile.Destroyed = true;
         m_Player->Destroyed = true;
     }
 }

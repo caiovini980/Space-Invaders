@@ -140,8 +140,6 @@ void EnemyManager::SpawnEnemies(const LevelDefinition& level)
             position.x += (level.Padding + m_EnemySize.x) * x;
             position.y += (level.Padding + m_EnemySize.y) * y;
 
-            // GameObject newEnemy = 
-            
             m_Enemies.emplace_back(position, m_EnemySize, enemySprite, colorMapping[colorIndex]);
         }
 
@@ -154,17 +152,7 @@ void EnemyManager::SpawnEnemies(const LevelDefinition& level)
 
 void EnemyManager::CheckCollisions(GameObject& projectile)
 {
-    for (auto& enemy : m_Enemies)
-    {
-        if (Collision::IsColliding(projectile, enemy))
-        {
-            if (enemy.Destroyed) { continue; }
-
-            std::cout << "Hit Player!\n";
-            projectile.Destroyed = true;
-            enemy.Destroyed = true;
-        }
-    }
+    
 }
 
 glm::vec2 EnemyManager::CalculateEnemySize(const LevelDefinition& level)

@@ -17,7 +17,6 @@ public:
     glm::vec3 Color{1.f};
     float Rotation{0.f};
     bool Destroyed{false};
-    bool bIsPlayer{false};
     
     GameObject();
     GameObject(glm::vec2 position, glm::vec2 size, const std::shared_ptr<Texture>& sprite, glm::vec3 color = glm::vec3(1.0f), glm::vec2 velocity = glm::vec2(0.0f, 0.0f));
