@@ -13,6 +13,7 @@ class SpriteRenderer;
 class Shader;
 class GameLevel;
 class PlayerManager;
+class BackgroundManager;
 
 class Game : public IProjectileHandler
 {
@@ -41,9 +42,11 @@ private:
     std::vector<GameObject> m_PlayerProjectiles;
     
     std::unique_ptr<PlayerManager> m_PlayerManager;
+    std::unique_ptr<BackgroundManager> m_BackgroundManager;
     std::unique_ptr<SpriteRenderer> m_SpriteRenderer;
     std::unique_ptr<GameLevel> m_Level;
     std::unique_ptr<UIManager> m_UIManager;
+    
     EGameState m_CurrentState{EGameState::Playing};
 
     void HandleGameWon();

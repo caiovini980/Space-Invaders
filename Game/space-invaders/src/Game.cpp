@@ -8,6 +8,7 @@
 #include "SpriteRenderer.h"
 #include "players/PlayerManager.h"
 #include "Collision.h"
+#include "background/BackgroundManager.h"
 
 #include "glm/ext/matrix_clip_space.hpp"
 #include "ui/UIManager.h"
@@ -34,9 +35,12 @@ void Game::Init()
     // Create Player
     m_PlayerManager = std::make_unique<PlayerManager>(*this);
     m_PlayerManager->CreatePlayer(WIDTH, HEIGHT);
-
+    
+    // Create Level
     m_Level = std::make_unique<GameLevel>(WIDTH, HEIGHT, *this);
-
+    m_BackgroundManager = std::make_unique<BackgroundManager>(WIDTH, HEIGHT);
+    
+    // Create UI
     m_UIManager = std::make_unique<UIManager>(WIDTH, HEIGHT);
 }
 
@@ -63,7 +67,10 @@ void Game::Update(float deltaTime)
 
 void Game::ProcessInput(float deltaTime, const Input& input)
 {
-    m_PlayerManager->ProcessInput(deltaTime, input, WIDTH);
+    if (!m_PlayerManager->GetPlayer().Destroyed)
+    {
+        m_PlayerManager->ProcessInput(deltaTime, input, WIDTH);
+    }
 }
 
 void Game::RenderProjectiles() const
@@ -81,6 +88,7 @@ void Game::RenderProjectiles() const
 
 void Game::Render()
 {
+    m_BackgroundManager->Render(*m_SpriteRenderer);
     m_Level->Render(*m_SpriteRenderer);
     m_PlayerManager->Render(*m_SpriteRenderer);
     
@@ -89,18 +97,20 @@ void Game::Render()
 
     if(m_CurrentState == EGameState::Playing)
     {
-        m_UIManager->RenderInGameScreen();
+        m_UIManager->RenderInGameScreen(m_PlayerManager->GetPlayerCurrentLives());
     }
     else if(m_CurrentState == EGameState::GameWin)
     {
         m_UIManager->RenderGameWinScreen();
     }
+    else if (m_CurrentState == EGameState::GameOver)
+    {
+        m_UIManager->RenderGameOverScreen();
+    }
 }
 
 void Game::Close()
 {
-    std::cout << "Closing game...\n";
-
     ResourceManager::ClearAll();
 }
 
