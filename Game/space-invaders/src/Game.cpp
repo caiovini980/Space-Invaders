@@ -67,7 +67,10 @@ void Game::Update(float deltaTime)
 
 void Game::ProcessInput(float deltaTime, const Input& input)
 {
-    m_PlayerManager->ProcessInput(deltaTime, input, WIDTH);
+    if (!m_PlayerManager->GetPlayer().Destroyed)
+    {
+        m_PlayerManager->ProcessInput(deltaTime, input, WIDTH);
+    }
 }
 
 void Game::RenderProjectiles() const
@@ -94,7 +97,6 @@ void Game::Render()
 
     if(m_CurrentState == EGameState::Playing)
     {
-        // m_UIManager->RenderInGameScreen();
         m_UIManager->RenderInGameScreen(m_PlayerManager->GetPlayerCurrentLives());
     }
     else if(m_CurrentState == EGameState::GameWin)
