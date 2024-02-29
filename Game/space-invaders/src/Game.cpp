@@ -118,8 +118,9 @@ void Game::UpdateEnemyProjectiles(float deltaTime)
         }
 
         GameObject& player = m_PlayerManager->GetPlayer();
-        if (!Collision::IsColliding(projectile, player)) { return; }
+        
         if (player.Destroyed) { return; }
+        if (!Collision::IsColliding(projectile, player)) { return; }
 
         projectile.Destroyed = true;
         m_PlayerManager->HandlePlayerHit();
@@ -130,8 +131,8 @@ void Game::CheckEnemyCollisions(std::vector<GameObject>::value_type& projectile)
 {
     for (auto& enemy : m_Level->GetEnemies())
     {
-        if (!Collision::IsColliding(projectile, enemy)) { continue; }
         if (enemy.Destroyed) { continue; }
+        if (!Collision::IsColliding(projectile, enemy)) { continue; }
 
         std::cout << "Hit Enemy!\n";
         projectile.Destroyed = true;

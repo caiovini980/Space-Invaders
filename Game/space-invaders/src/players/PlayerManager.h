@@ -3,7 +3,6 @@
 
 #include <iostream>
 
-// #include "Game.h"
 #include "glm/glm.hpp"
 
 #include "../core/SpriteRenderer.h"

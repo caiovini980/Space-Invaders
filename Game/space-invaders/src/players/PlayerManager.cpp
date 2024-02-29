@@ -2,7 +2,6 @@
 
 #include <GLFW/glfw3.h>
 
-#include "Collision.h"
 #include "../ResourceManager.h"
 #include "../utils/GameTime.h"
 

@@ -2,7 +2,6 @@
 
 #include <iostream>
 
-#include "Collision.h"
 #include "LevelDefinition.h"
 #include "ResourceManager.h"
 #include "interfaces/IProjectileHandler.h"
@@ -148,11 +147,6 @@ void EnemyManager::SpawnEnemies(const LevelDefinition& level)
             colorIndex = (colorIndex + 1) % totalColors;
         }
     }
-}
-
-void EnemyManager::CheckCollisions(GameObject& projectile)
-{
-    
 }
 
 glm::vec2 EnemyManager::CalculateEnemySize(const LevelDefinition& level)
