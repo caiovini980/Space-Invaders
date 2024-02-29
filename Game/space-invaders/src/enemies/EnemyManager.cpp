@@ -33,7 +33,10 @@ void EnemyManager::MoveEnemies(float deltaTime)
     {
         enemy.Position += m_MovementVelocity * m_MovementDirection * deltaTime;
 
-        if(enemy.Position.x <= 0.f || enemy.Position.x + m_EnemySize.x >= m_LevelWidth)
+        bool bIsCrossingLeftBound = m_MovementDirection.x < 0.f && enemy.Position.x <= 0.f;
+        bool bIsCrossingRightBound = m_MovementDirection.x > 0.f && enemy.Position.x + m_EnemySize.x >= m_LevelWidth;
+        
+        if(bIsCrossingLeftBound || bIsCrossingRightBound)
         {
             bHasHitWall = true;
         }
