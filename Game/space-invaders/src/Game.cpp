@@ -21,7 +21,6 @@ void Game::Init()
 {
     std::cout << "Game starting...\n";
 
-    // Load shaders
     std::shared_ptr<Shader> spriteShader = ResourceManager::LoadShader("res/shaders/Sprite.vertex",
         "res/shaders/Sprite.frag", "Test");
 
@@ -32,15 +31,12 @@ void Game::Init()
     
     m_SpriteRenderer = std::make_unique<SpriteRenderer>(spriteShader);
     
-    // Create Player
     m_PlayerManager = std::make_unique<PlayerManager>(*this);
     m_PlayerManager->CreatePlayer(WIDTH, HEIGHT);
     
-    // Create Level
     m_Level = std::make_unique<GameLevel>(WIDTH, HEIGHT, *this);
     m_BackgroundManager = std::make_unique<BackgroundManager>(WIDTH, HEIGHT);
     
-    // Create UI
     m_UIManager = std::make_unique<UIManager>(WIDTH, HEIGHT);
 }
 
@@ -48,11 +44,7 @@ void Game::Update(float deltaTime)
 {
     if(m_CurrentState == EGameState::Playing)
     {
-        if(m_Level->IsEveryEnemyKilled())
-        {
-            HandleGameWon();
-            return;
-        }
+        if (HasGameEnded()) return;
 
         UpdatePlayerProjectiles(deltaTime);
         UpdateEnemyProjectiles(deltaTime);
@@ -65,9 +57,9 @@ void Game::Update(float deltaTime)
     }
 }
 
-void Game::ProcessInput(float deltaTime, const Input& input)
+void Game::ProcessInput(float deltaTime, const Input& input) const
 {
-    if (!m_PlayerManager->GetPlayer().Destroyed)
+    if (m_CurrentState == EGameState::Playing || m_CurrentState == EGameState::GameWin)
     {
         m_PlayerManager->ProcessInput(deltaTime, input, WIDTH);
     }
@@ -105,7 +97,7 @@ void Game::Render()
     }
     else if (m_CurrentState == EGameState::GameOver)
     {
-        m_UIManager->RenderGameOverScreen();
+        m_UIManager->RenderGameOverScreen(*m_SpriteRenderer);
     }
 }
 
@@ -162,7 +154,7 @@ void Game::UpdateEnemyProjectiles(float deltaTime)
     }
 }
 
-void Game::CheckEnemyCollisions(GameObject& projectile)
+void Game::CheckEnemyCollisions(GameObject& projectile) const
 {
     for (auto& enemy : m_Level->GetEnemies())
     {
@@ -180,6 +172,29 @@ void Game::HandleGameWon()
 {
     m_CurrentState = EGameState::GameWin;
     m_EnemyProjectiles.clear();
+}
+
+
+void Game::HandleGameLost()
+{
+    m_CurrentState = EGameState::GameOver;
+    m_PlayerProjectiles.clear();
+}
+
+bool Game::HasGameEnded()
+{
+    if(m_Level->IsEveryEnemyKilled())
+    {
+        HandleGameWon();
+        return true;
+    }
+
+    if(m_PlayerManager->GetPlayer().Destroyed)
+    {
+        HandleGameLost();
+        return true;
+    }
+    return false;
 }
 
 void Game::RemoveDestroyedProjectiles()
