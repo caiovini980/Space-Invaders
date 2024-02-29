@@ -38,6 +38,8 @@ void PlayerManager::CreatePlayer(float screenWidth, float screenHeight)
         PLAYER_COLOR,
         glm::vec2(PLAYER_SPEED)
         );
+    
+    m_PlayerCurrentLives = PLAYER_INITIAL_LIVES;
 }
 
 void PlayerManager::ProcessInput(float deltaTime, const Input& input, float boundsWidth)
@@ -78,7 +80,7 @@ void PlayerManager::CreateProjectile()
     constexpr glm::vec2 projectileSize = glm::vec2(20.0f, 20.0f);
         
     // set color
-    constexpr glm::vec3 projectileColor = glm::vec3(1.0f, 0.5f, 0.0f);
+    constexpr glm::vec3 projectileColor = glm::vec3(0.5f, 1.0f, 1.0f);
             
     // set position
     m_ShotPosition = glm::vec2(
@@ -101,7 +103,18 @@ void PlayerManager::CreateProjectile()
 
 void PlayerManager::Render(const SpriteRenderer& renderer) const
 {
+    if (m_Player->Destroyed) return;
     renderer.Draw(*m_PlayerSprite, m_Player->Position, m_Player->Size, m_Player->Rotation, m_Player->Color);
+}
+
+void PlayerManager::HandlePlayerHit()
+{
+    m_PlayerCurrentLives -= 1;
+
+    if (m_PlayerCurrentLives <= 0)
+    {
+        m_Player->Destroyed = true;
+    }
 }
 
 bool PlayerManager::CheckIfCanShootAgain() const
