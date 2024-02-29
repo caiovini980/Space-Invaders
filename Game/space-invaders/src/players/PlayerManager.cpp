@@ -2,6 +2,7 @@
 
 #include <GLFW/glfw3.h>
 
+#include "Collision.h"
 #include "../ResourceManager.h"
 #include "../utils/GameTime.h"
 
@@ -38,6 +39,8 @@ void PlayerManager::CreatePlayer(float screenWidth, float screenHeight)
         PLAYER_COLOR,
         glm::vec2(PLAYER_SPEED)
         );
+
+    m_Player->bIsPlayer = true;
 }
 
 void PlayerManager::ProcessInput(float deltaTime, const Input& input, float boundsWidth)
@@ -78,7 +81,7 @@ void PlayerManager::CreateProjectile()
     constexpr glm::vec2 projectileSize = glm::vec2(20.0f, 20.0f);
         
     // set color
-    constexpr glm::vec3 projectileColor = glm::vec3(1.0f, 0.5f, 0.0f);
+    constexpr glm::vec3 projectileColor = glm::vec3(0.5f, 1.0f, 1.0f);
             
     // set position
     m_ShotPosition = glm::vec2(
@@ -101,7 +104,17 @@ void PlayerManager::CreateProjectile()
 
 void PlayerManager::Render(const SpriteRenderer& renderer) const
 {
+    if (m_Player->Destroyed) return;
     renderer.Draw(*m_PlayerSprite, m_Player->Position, m_Player->Size, m_Player->Rotation, m_Player->Color);
+}
+
+void PlayerManager::CheckCollisions(GameObject& projectile, GameObject& enemy)
+{
+    if (!enemy.Destroyed && Collision::IsColliding(projectile, enemy))
+    {
+        projectile.Destroyed = true;
+        enemy.Destroyed = true;
+    }
 }
 
 bool PlayerManager::CheckIfCanShootAgain() const

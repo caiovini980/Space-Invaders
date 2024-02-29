@@ -25,3 +25,9 @@ void GameLevel::Render(const SpriteRenderer& renderer)
 {
     m_EnemyManager->Render(renderer);
 }
+
+void GameLevel::CheckCollisionWithEnemies(GameObject& projectile, GameObject& object)
+{
+    // check if collided with any enemy or player
+    m_EnemyManager->CheckCollisions(projectile, object);
+}

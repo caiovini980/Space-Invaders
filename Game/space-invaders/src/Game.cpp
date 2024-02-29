@@ -7,6 +7,8 @@
 #include "ResourceManager.h"
 #include "SpriteRenderer.h"
 #include "players/PlayerManager.h"
+#include "Collision.h"
+
 #include "glm/ext/matrix_clip_space.hpp"
 
 Game::Game() {}
@@ -18,7 +20,8 @@ void Game::Init()
     std::cout << "Game starting...\n";
 
     // Load shaders
-    std::shared_ptr<Shader> spriteShader = ResourceManager::LoadShader("res/shaders/Sprite.vertex", "res/shaders/Sprite.frag", "Test");
+    std::shared_ptr<Shader> spriteShader = ResourceManager::LoadShader("res/shaders/Sprite.vertex",
+        "res/shaders/Sprite.frag", "Test");
 
     spriteShader->Bind();
     glm::mat4 ortho = glm::ortho(0.f, WIDTH, HEIGHT, 0.f, -1.f, 1.f);
@@ -38,7 +41,7 @@ void Game::Update(float deltaTime)
 {
     UpdatePlayerProjectiles(deltaTime);
     UpdateEnemyProjectiles(deltaTime);
-
+    
     m_Level->Update(deltaTime);
 }
 
@@ -98,6 +101,12 @@ void Game::UpdatePlayerProjectiles(float deltaTime)
         {
             projectile.Destroyed = true;
         }
+        
+        // check collision with enemies or block
+        for (auto& enemy : m_Level->GetEnemies())
+        {
+            m_PlayerManager->CheckCollisions(projectile, enemy);
+        }
     }
 }
 
@@ -111,6 +120,10 @@ void Game::UpdateEnemyProjectiles(float deltaTime)
         {
             projectile.Destroyed = true;
         }
+
+        GameObject& player = m_PlayerManager->GetPlayer();
+        
+        m_Level->CheckCollisionWithEnemies(projectile, player);
     }
 }
 

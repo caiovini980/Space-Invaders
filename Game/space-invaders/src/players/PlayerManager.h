@@ -3,10 +3,11 @@
 
 #include <iostream>
 
+// #include "Game.h"
 #include "glm/glm.hpp"
 
-#include "../Input.h"
 #include "../core/SpriteRenderer.h"
+#include "../Input.h"
 #include "../interfaces/IProjectileHandler.h"
 
 class PlayerManager
@@ -19,6 +20,9 @@ public:
     void CreateProjectile();
     void ProcessInput(float deltaTime, const Input& input, float boundsWidth);
     void Render(const SpriteRenderer& renderer) const;
+    void CheckCollisions(GameObject& projectile, GameObject& enemy);
+
+    GameObject& GetPlayer() const { return *m_Player; }
 
 private:
     IProjectileHandler& m_ProjectileHandler;

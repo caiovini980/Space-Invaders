@@ -1,5 +1,6 @@
 #pragma once
 #include <vector>
+#include <algorithm>
 
 #include "../GameObject.h"
 #include "../LevelDefinition.h"
@@ -15,7 +16,10 @@ public:
     
     void Update(float deltaTime);
     void Render(const SpriteRenderer& renderer);
+    void CheckCollisions(GameObject& projectile, GameObject& hitObject);
 
+    std::vector<GameObject>& GetEnemies() { return m_Enemies; }
+    
 private:
 
     const float SHOOT_SECONDS_COOLDOWN = 1.5f;
