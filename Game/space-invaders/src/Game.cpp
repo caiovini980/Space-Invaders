@@ -42,10 +42,23 @@ void Game::Init()
 
 void Game::Update(float deltaTime)
 {
-    UpdatePlayerProjectiles(deltaTime);
-    UpdateEnemyProjectiles(deltaTime);
-    
-    m_Level->Update(deltaTime);
+    if(m_CurrentState == EGameState::Playing)
+    {
+        if(m_Level->IsEveryEnemyKilled())
+        {
+            HandleGameWon();
+            return;
+        }
+
+        UpdatePlayerProjectiles(deltaTime);
+        UpdateEnemyProjectiles(deltaTime);
+        
+        m_Level->Update(deltaTime);
+    }
+    else if(m_CurrentState == EGameState::GameWin)
+    {
+        UpdatePlayerProjectiles(deltaTime);
+    }
 }
 
 void Game::ProcessInput(float deltaTime, const Input& input)
@@ -74,7 +87,14 @@ void Game::Render()
     RenderProjectiles();
     RemoveDestroyedProjectiles();
 
-    m_UIManager->RenderInGameScreen();
+    if(m_CurrentState == EGameState::Playing)
+    {
+        m_UIManager->RenderInGameScreen();
+    }
+    else if(m_CurrentState == EGameState::GameWin)
+    {
+        m_UIManager->RenderGameWinScreen();
+    }
 }
 
 void Game::Close()
@@ -144,6 +164,12 @@ void Game::CheckEnemyCollisions(GameObject& projectile)
 
         break;
     }
+}
+
+void Game::HandleGameWon()
+{
+    m_CurrentState = EGameState::GameWin;
+    m_EnemyProjectiles.clear();
 }
 
 void Game::RemoveDestroyedProjectiles()

@@ -154,6 +154,11 @@ void EnemyManager::IncreaseDifficulty()
     m_MovementVelocity = INITIAL_MOVEMENT_VELOCITY * MOVEMENT_VELOCITY_MULTIPLIER_CURVE[m_CurrentDifficultyIndex];
 }
 
+bool EnemyManager::IsEveryEnemyKilled() const
+{
+    return m_TotalEnemiesKilled >= m_TotalEnemies;
+}
+
 void EnemyManager::SpawnEnemies(const LevelDefinition& level)
 {
     std::shared_ptr<Texture> enemySprite = ResourceManager::LoadTexture("res/textures/enemy.png", "Enemy", true);

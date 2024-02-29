@@ -2,6 +2,7 @@
 #include <memory>
 #include <vector>
 
+#include "EGameState.h"
 #include "Input.h"
 #include "interfaces/IProjectileHandler.h"
 
@@ -43,6 +44,8 @@ private:
     std::unique_ptr<SpriteRenderer> m_SpriteRenderer;
     std::unique_ptr<GameLevel> m_Level;
     std::unique_ptr<UIManager> m_UIManager;
-    
+    EGameState m_CurrentState{EGameState::Playing};
+
+    void HandleGameWon();
     void RemoveDestroyedProjectiles();
 };

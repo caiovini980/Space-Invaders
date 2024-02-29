@@ -17,6 +17,7 @@ public:
 
     std::vector<GameObject>& GetEnemies() const { return m_EnemyManager->GetEnemies(); }
     void HandleEnemyHit(GameObject& projectile);
+    bool IsEveryEnemyKilled() const;
 
 private:
 

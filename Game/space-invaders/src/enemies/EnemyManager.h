@@ -16,6 +16,7 @@ public:
     void Update(float deltaTime);
     void Render(const SpriteRenderer& renderer);
     void HandleEnemyHit(GameObject& enemy);
+    bool IsEveryEnemyKilled() const;
 
     std::vector<GameObject>& GetEnemies() { return m_Enemies; }
     

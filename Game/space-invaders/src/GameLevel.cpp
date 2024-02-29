@@ -30,3 +30,8 @@ void GameLevel::HandleEnemyHit(GameObject& enemy)
 {
     m_EnemyManager->HandleEnemyHit(enemy);
 }
+
+bool GameLevel::IsEveryEnemyKilled() const
+{
+    return m_EnemyManager->IsEveryEnemyKilled();
+}
