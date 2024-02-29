@@ -8,6 +8,7 @@
 #include "SpriteRenderer.h"
 #include "players/PlayerManager.h"
 #include "glm/ext/matrix_clip_space.hpp"
+#include "ui/UIManager.h"
 
 Game::Game() {}
 
@@ -32,6 +33,8 @@ void Game::Init()
     m_PlayerManager->CreatePlayer(WIDTH, HEIGHT);
 
     m_Level = std::make_unique<GameLevel>(800, 600, *this);
+
+    m_UIManager = std::make_unique<UIManager>(WIDTH, HEIGHT);
 }
 
 void Game::Update(float deltaTime)
@@ -67,6 +70,8 @@ void Game::Render()
     
     RenderProjectiles();
     RemoveDestroyedProjectiles();
+
+    m_UIManager->RenderInGameScreen();
 }
 
 void Game::Close()

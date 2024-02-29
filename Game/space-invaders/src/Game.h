@@ -6,6 +6,8 @@
 #include "interfaces/IProjectileHandler.h"
 #include "players/PlayerManager.h"
 
+class UIManager;
+class TextRenderer;
 class Texture;
 class SpriteRenderer;
 class Shader;
@@ -39,6 +41,7 @@ private:
     std::unique_ptr<SpriteRenderer> m_SpriteRenderer;
     std::unique_ptr<GameLevel> m_Level;
     std::unique_ptr<PlayerManager> m_PlayerManager;
+    std::unique_ptr<UIManager> m_UIManager;
     
     void RemoveDestroyedProjectiles();
 };

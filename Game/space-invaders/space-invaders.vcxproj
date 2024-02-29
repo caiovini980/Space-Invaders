@@ -181,6 +181,7 @@
     <ClCompile Include="src\interfaces\IProjectileHandler.cpp" />
     <ClCompile Include="src\players\PlayerManager.cpp" />
     <ClCompile Include="src\ResourceManager.cpp" />
+    <ClCompile Include="src\ui\UIManager.cpp" />
     <ClCompile Include="src\utils\GameTime.cpp" />
     <ClCompile Include="src\vendor\glm\detail\glm.cpp" />
     <ClCompile Include="src\vendor\stb_image\stb_image.cpp" />
@@ -205,6 +206,7 @@
     <ClInclude Include="src\LevelDefinition.h" />
     <ClInclude Include="src\players\PlayerManager.h" />
     <ClInclude Include="src\ResourceManager.h" />
+    <ClInclude Include="src\ui\UIManager.h" />
     <ClInclude Include="src\utils\GameTime.h" />
     <ClInclude Include="src\vendor\glm\common.hpp" />
     <ClInclude Include="src\vendor\glm\detail\compute_common.hpp" />
