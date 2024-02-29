@@ -103,6 +103,10 @@ void Game::Render()
     {
         m_UIManager->RenderGameWinScreen();
     }
+    else if (m_CurrentState == EGameState::GameOver)
+    {
+        m_UIManager->RenderGameOverScreen();
+    }
 }
 
 void Game::Close()

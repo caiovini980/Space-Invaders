@@ -46,6 +46,7 @@ private:
     std::unique_ptr<SpriteRenderer> m_SpriteRenderer;
     std::unique_ptr<GameLevel> m_Level;
     std::unique_ptr<UIManager> m_UIManager;
+    
     EGameState m_CurrentState{EGameState::Playing};
 
     void HandleGameWon();

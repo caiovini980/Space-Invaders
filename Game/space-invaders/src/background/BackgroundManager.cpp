@@ -5,29 +5,23 @@
 
 BackgroundManager::BackgroundManager(unsigned levelWidth, unsigned levelHeight)
 {
-    // load texture
     m_GameBackgroundSprite = ResourceManager::LoadTexture("./res/textures/background.png", "Background", false);
 
-    // set size
-    glm::vec2 gameBackgroundSize = glm::vec2(levelWidth, levelHeight);
-
-    // set position
-    glm::vec2 gameBackgroundPosition = glm::vec2(0, 0);
+    const glm::vec2 gameBackgroundSize = glm::vec2(levelWidth, levelHeight);
+    constexpr glm::vec2 gameBackgroundPosition = glm::vec2(0, 0);
+    constexpr glm::vec3 gameBackgroundColor = glm::vec3(1.0, 0.0, 0.5);
     
-    // set color
-    glm::vec3 gameBackgroundColor = glm::vec3(1.0, 0.0, 0.5);
-
-    // create GameObject
-    m_GameBackground = std::make_shared<GameObject>(
+    m_GameBackground = GameObject {
         gameBackgroundPosition,
         gameBackgroundSize,
         m_GameBackgroundSprite,
-        gameBackgroundColor);
+        gameBackgroundColor
+    };
 }
 
-void BackgroundManager::Render(SpriteRenderer& renderer)
+auto BackgroundManager::Render(const SpriteRenderer& renderer) const -> void
 {
-    m_GameBackground->Draw(renderer);
+    m_GameBackground.Draw(renderer);
 }
 
 void BackgroundManager::Update(float deltaTime)

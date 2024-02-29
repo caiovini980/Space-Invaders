@@ -11,6 +11,7 @@ public:
 
     void RenderInGameScreen(unsigned int playerLives) const;
     void RenderGameWinScreen() const;
+    void RenderGameOverScreen() const;
 
 private:
 

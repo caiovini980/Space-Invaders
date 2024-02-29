@@ -1,6 +1,7 @@
 ﻿#pragma once
 #include <memory>
 
+#include "GameObject.h"
 #include "Texture.h"
 
 class SpriteRenderer;
@@ -11,10 +12,10 @@ class BackgroundManager
 public:
     BackgroundManager(unsigned int levelWidth, unsigned int levelHeight);
     
-    void Render(SpriteRenderer& renderer);
+    void Render(const SpriteRenderer& renderer) const;
     void Update(float deltaTime);
 
 private:
-    std::shared_ptr<GameObject> m_GameBackground;
+    GameObject m_GameBackground;
     std::shared_ptr<Texture> m_GameBackgroundSprite;
 };
