@@ -22,7 +22,9 @@ public:
     void HandlePlayerHit();
 
     GameObject& GetPlayer() const { return *m_Player; }
-
+    
+    int GetPlayerCurrentLives() const { return m_PlayerCurrentLives; }
+    
 private:
     IProjectileHandler& m_ProjectileHandler;
     
@@ -45,7 +47,6 @@ private:
     glm::vec2 m_ShotPosition;
     
     float m_LastShotTime = 0.0f;
-
     
     int m_PlayerCurrentLives = 3;
 };

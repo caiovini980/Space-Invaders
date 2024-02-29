@@ -81,7 +81,7 @@ void Game::Render()
     RenderProjectiles();
     RemoveDestroyedProjectiles();
 
-    m_UIManager->RenderInGameScreen();
+    m_UIManager->RenderInGameScreen(m_PlayerManager->GetPlayerCurrentLives());
 }
 
 void Game::Close()

@@ -9,7 +9,7 @@ public:
 
     UIManager(unsigned int screenWidth, unsigned int screenHeight);
 
-    void RenderInGameScreen();
+    void RenderInGameScreen(unsigned int playerLives);
 
 private:
 
