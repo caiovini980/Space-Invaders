@@ -17,4 +17,6 @@ private:
     unsigned int m_ScreenWidth{0};
     unsigned int m_ScreenHeight{0};
     std::unique_ptr<TextRenderer> m_TextRenderer;
+    std::shared_ptr<Shader> m_DefaultTextShader;
+    std::shared_ptr<Shader> m_BlinkTextShader;
 };

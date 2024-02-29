@@ -17,6 +17,7 @@ public:
     void Render(const SpriteRenderer& renderer);
     void HandleEnemyHit(GameObject& enemy);
     bool IsEveryEnemyKilled() const;
+    void Restart();
 
     std::vector<GameObject>& GetEnemies() { return m_Enemies; }
     
@@ -45,6 +46,7 @@ private:
         14.f
     };
     const glm::vec2 INITIAL_MOVEMENT_VELOCITY{20.f, 20.f};
+    const glm::vec2 INITIAL_MOVEMENT_DIRECTION{1.f, 0.f};
     const glm::vec2 SHOOT_VELOCITY{0.f, 300.f};
     const glm::vec2 PROJECTILE_SIZE{20.f, 20.f};
     const glm::vec3 PROJECTILE_COLOR{1.f, 0.f, 0.f};
@@ -62,6 +64,7 @@ private:
     int m_TotalEnemiesKilled{0};
     int m_TotalEnemies{0};
     std::shared_ptr<Texture> m_ProjectileSprite;
+    LevelDefinition m_Level;
 
     void MoveEnemies(float deltaTime);
     void MoveEnemiesDownwards();
@@ -71,4 +74,5 @@ private:
     void IncreaseDifficulty();
     void SpawnEnemies(const LevelDefinition& level);
     glm::vec2 CalculateEnemySize(const LevelDefinition& level);
+    glm::vec2 CalculateStartPosition(const LevelDefinition& level);
 };

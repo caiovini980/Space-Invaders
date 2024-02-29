@@ -47,5 +47,6 @@ private:
     EGameState m_CurrentState{EGameState::Playing};
 
     void HandleGameWon();
+    void Restart();
     void RemoveDestroyedProjectiles();
 };

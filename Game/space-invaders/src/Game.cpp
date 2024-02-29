@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <memory>
+#include <GLFW/glfw3.h>
 
 #include "GameLevel.h"
 #include "ResourceManager.h"
@@ -64,6 +65,14 @@ void Game::Update(float deltaTime)
 void Game::ProcessInput(float deltaTime, const Input& input)
 {
     m_PlayerManager->ProcessInput(deltaTime, input, WIDTH);
+
+    if(m_CurrentState == EGameState::GameWin || m_CurrentState == EGameState::GameOver)
+    {
+        if(input.GetKey(GLFW_KEY_R))
+        {
+            Restart();
+        }
+    }
 }
 
 void Game::RenderProjectiles() const
@@ -170,6 +179,13 @@ void Game::HandleGameWon()
 {
     m_CurrentState = EGameState::GameWin;
     m_EnemyProjectiles.clear();
+}
+
+void Game::Restart()
+{
+    m_CurrentState = EGameState::Playing;
+    m_PlayerProjectiles.clear();
+    m_Level->Restart();
 }
 
 void Game::RemoveDestroyedProjectiles()

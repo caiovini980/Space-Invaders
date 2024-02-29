@@ -27,6 +27,8 @@ public:
     TextRenderer(unsigned int width, unsigned int height, const std::string& fontPath, unsigned int fontSize, const std::shared_ptr<Shader>& shader);
     ~TextRenderer();
     void RenderText(const std::string& text, float x, float y, float scale, const glm::vec3& color);
+    void SetupShader(const std::shared_ptr<Shader>& shader) const;
+    void ChangeShader(const std::shared_ptr<Shader>& shader);
     
 private:
 
@@ -35,6 +37,8 @@ private:
     std::unique_ptr<VertexArray> m_VAO;
     std::unique_ptr<VertexBuffer> m_VBO;
     std::unique_ptr<IndexBuffer> m_IBO;
+    unsigned int m_ScreenWidth{0};
+    unsigned int m_ScreenHeight{0};
 
     void LoadFont(const std::string& fontPath, unsigned int fontSize);
 };

@@ -35,3 +35,8 @@ bool GameLevel::IsEveryEnemyKilled() const
 {
     return m_EnemyManager->IsEveryEnemyKilled();
 }
+
+void GameLevel::Restart()
+{
+    m_EnemyManager->Restart();
+}
