@@ -28,5 +28,10 @@ void GameLevel::Render(const SpriteRenderer& renderer)
 
 void GameLevel::HandleEnemyHit(GameObject& enemy)
 {
-    enemy.Destroyed = true;
+    m_EnemyManager->HandleEnemyHit(enemy);
+}
+
+bool GameLevel::IsEveryEnemyKilled() const
+{
+    return m_EnemyManager->IsEveryEnemyKilled();
 }

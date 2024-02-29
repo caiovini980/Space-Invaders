@@ -8,7 +8,6 @@
 #include "SpriteRenderer.h"
 #include "players/PlayerManager.h"
 #include "Collision.h"
-#include "background/BackgroundManager.h"
 
 #include "glm/ext/matrix_clip_space.hpp"
 #include "ui/UIManager.h"
@@ -36,20 +35,30 @@ void Game::Init()
     m_PlayerManager = std::make_unique<PlayerManager>(*this);
     m_PlayerManager->CreatePlayer(WIDTH, HEIGHT);
 
-    // Create Level
     m_Level = std::make_unique<GameLevel>(WIDTH, HEIGHT, *this);
-    m_BackgroundManager = std::make_unique<BackgroundManager>(WIDTH, HEIGHT);
-    
-    // Create UI
+
     m_UIManager = std::make_unique<UIManager>(WIDTH, HEIGHT);
 }
 
 void Game::Update(float deltaTime)
 {
-    UpdatePlayerProjectiles(deltaTime);
-    UpdateEnemyProjectiles(deltaTime);
-    
-    m_Level->Update(deltaTime);
+    if(m_CurrentState == EGameState::Playing)
+    {
+        if(m_Level->IsEveryEnemyKilled())
+        {
+            HandleGameWon();
+            return;
+        }
+
+        UpdatePlayerProjectiles(deltaTime);
+        UpdateEnemyProjectiles(deltaTime);
+        
+        m_Level->Update(deltaTime);
+    }
+    else if(m_CurrentState == EGameState::GameWin)
+    {
+        UpdatePlayerProjectiles(deltaTime);
+    }
 }
 
 void Game::ProcessInput(float deltaTime, const Input& input)
@@ -72,16 +81,20 @@ void Game::RenderProjectiles() const
 
 void Game::Render()
 {
-    
-    m_BackgroundManager->Render(*m_SpriteRenderer);
     m_Level->Render(*m_SpriteRenderer);
-    
     m_PlayerManager->Render(*m_SpriteRenderer);
     
     RenderProjectiles();
     RemoveDestroyedProjectiles();
 
-    m_UIManager->RenderInGameScreen(m_PlayerManager->GetPlayerCurrentLives());
+    if(m_CurrentState == EGameState::Playing)
+    {
+        m_UIManager->RenderInGameScreen();
+    }
+    else if(m_CurrentState == EGameState::GameWin)
+    {
+        m_UIManager->RenderGameWinScreen();
+    }
 }
 
 void Game::Close()
@@ -105,21 +118,23 @@ void Game::UpdatePlayerProjectiles(float deltaTime)
 {
     for (auto& projectile : m_PlayerProjectiles)
     {
-        // update position
         projectile.Position.y -= projectile.Velocity.y * deltaTime;
         
-        // check boundaries
         if (projectile.Position.y <= 0)
         {
             projectile.Destroyed = true;
         }
-
-        CheckEnemyCollisions(projectile);
+        else
+        {
+            CheckEnemyCollisions(projectile);
+        }
     }
 }
 
 void Game::UpdateEnemyProjectiles(float deltaTime)
 {
+    GameObject& player = m_PlayerManager->GetPlayer();
+
     for(auto& projectile : m_EnemyProjectiles)
     {
         projectile.Position += projectile.Velocity * deltaTime;
@@ -129,27 +144,32 @@ void Game::UpdateEnemyProjectiles(float deltaTime)
             projectile.Destroyed = true;
         }
 
-        GameObject& player = m_PlayerManager->GetPlayer();
-        
-        if (player.Destroyed) { return; }
-        if (!Collision::IsColliding(projectile, player)) { return; }
+        if (player.Destroyed) { continue; }
+        if (!Collision::IsColliding(projectile, player)) { continue; }
 
         projectile.Destroyed = true;
         m_PlayerManager->HandlePlayerHit();
     }
 }
 
-void Game::CheckEnemyCollisions(std::vector<GameObject>::value_type& projectile)
+void Game::CheckEnemyCollisions(GameObject& projectile)
 {
     for (auto& enemy : m_Level->GetEnemies())
     {
         if (enemy.Destroyed) { continue; }
         if (!Collision::IsColliding(projectile, enemy)) { continue; }
 
-        std::cout << "Hit Enemy!\n";
         projectile.Destroyed = true;
         m_Level->HandleEnemyHit(enemy);
+
+        break;
     }
+}
+
+void Game::HandleGameWon()
+{
+    m_CurrentState = EGameState::GameWin;
+    m_EnemyProjectiles.clear();
 }
 
 void Game::RemoveDestroyedProjectiles()
@@ -160,7 +180,6 @@ void Game::RemoveDestroyedProjectiles()
         if (playerIterator->Destroyed)
         {
             playerIterator = m_PlayerProjectiles.erase(playerIterator);
-            std::cout << "Player projectile erased!\n";
         }
         else
         {
@@ -174,7 +193,6 @@ void Game::RemoveDestroyedProjectiles()
         if (enemyIterator->Destroyed)
         {
             enemyIterator = m_EnemyProjectiles.erase(enemyIterator);
-            std::cout << "Enemy projectile erased!\n";
         }
         else
         {

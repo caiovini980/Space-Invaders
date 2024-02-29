@@ -2,6 +2,7 @@
 #include <memory>
 #include <vector>
 
+#include "EGameState.h"
 #include "Input.h"
 #include "interfaces/IProjectileHandler.h"
 
@@ -31,7 +32,7 @@ public:
 
     void AddEnemyProjectile(GameObject&& projectile) override;
     void AddPlayerProjectile(GameObject&& projectile) override;
-    void CheckEnemyCollisions(std::vector<GameObject>::value_type& projectile);
+    void CheckEnemyCollisions(GameObject& projectile);
 
 private:
     const float WIDTH = 800.0f;
@@ -45,6 +46,8 @@ private:
     std::unique_ptr<SpriteRenderer> m_SpriteRenderer;
     std::unique_ptr<GameLevel> m_Level;
     std::unique_ptr<UIManager> m_UIManager;
-    
+    EGameState m_CurrentState{EGameState::Playing};
+
+    void HandleGameWon();
     void RemoveDestroyedProjectiles();
 };
