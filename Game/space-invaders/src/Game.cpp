@@ -139,7 +139,6 @@ void Game::CheckEnemyCollisions(GameObject& projectile)
         if (enemy.Destroyed) { continue; }
         if (!Collision::IsColliding(projectile, enemy)) { continue; }
 
-        std::cout << "Hit Enemy!\n";
         projectile.Destroyed = true;
         m_Level->HandleEnemyHit(enemy);
 
@@ -155,7 +154,6 @@ void Game::RemoveDestroyedProjectiles()
         if (playerIterator->Destroyed)
         {
             playerIterator = m_PlayerProjectiles.erase(playerIterator);
-            std::cout << "Player projectile erased!\n";
         }
         else
         {
@@ -169,7 +167,6 @@ void Game::RemoveDestroyedProjectiles()
         if (enemyIterator->Destroyed)
         {
             enemyIterator = m_EnemyProjectiles.erase(enemyIterator);
-            std::cout << "Enemy projectile erased!\n";
         }
         else
         {
