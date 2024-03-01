@@ -141,10 +141,11 @@ void EnemyManager::Render(const SpriteRenderer& renderer)
 
 void EnemyManager::HandleEnemyHit(GameObject& enemy)
 {
-    Audio::Play2DSound("./res/sounds/explosion.wav", false, 0.2f);
-    enemy.Destroyed = true;
     m_TotalEnemiesKilled++;
-
+    enemy.Destroyed = true;
+    
+    Audio::Play2DSound("./res/sounds/explosion.wav", false, 0.2f);
+    
     IncreaseDifficulty();
 }
 
