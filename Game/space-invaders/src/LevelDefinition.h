@@ -9,4 +9,9 @@ struct LevelDefinition
     float TopMargin;
     float MinBottomMargin;
     float GameOverBottomThreshold;
+    unsigned int TotalBarriers;
+    float BarrierPadding;
+    float BarrierHorizontalMargin;
+    float BarrierBottomMargin;
+    float MaxBarrierWidth;
 };

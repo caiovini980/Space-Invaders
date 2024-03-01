@@ -1,6 +1,7 @@
 #pragma once
 #include <memory>
 
+#include "LevelDefinition.h"
 #include "enemies/EnemyManager.h"
 
 class IProjectileHandler;
@@ -25,4 +26,7 @@ public:
 private:
 
     std::unique_ptr<EnemyManager> m_EnemyManager;
+    std::vector<GameObject> m_Barriers{};
+
+    void SpawnBarriers(float screenWidth, float screenHeight, const LevelDefinition& level);
 };
