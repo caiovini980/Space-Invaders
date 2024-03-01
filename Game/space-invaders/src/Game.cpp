@@ -189,6 +189,8 @@ void Game::HandleGameWon()
 {
     m_CurrentState = EGameState::GameWin;
     m_EnemyProjectiles.clear();
+    
+    Audio::Play2DSound("./res/sounds/level-complete.mp3", false, 0.5f);
 }
 
 void Game::HandleGameLost()
@@ -197,6 +199,8 @@ void Game::HandleGameLost()
     m_PlayerProjectiles.clear();
     m_PlayerManager->DestroyPlayer();
     m_Level->StopEnemiesAggression();
+    
+    Audio::Play2DSound("./res/sounds/game-over.wav", false, 0.5f);
 }
 
 bool Game::HasGameEnded()
