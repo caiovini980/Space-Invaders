@@ -36,6 +36,11 @@ bool GameLevel::IsEveryEnemyKilled() const
     return m_EnemyManager->IsEveryEnemyKilled();
 }
 
+void GameLevel::StopEnemiesAggression() const
+{
+    m_EnemyManager->StopAggression();
+}
+
 void GameLevel::Restart()
 {
     m_EnemyManager->Restart();

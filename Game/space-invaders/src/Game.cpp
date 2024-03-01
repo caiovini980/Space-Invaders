@@ -56,6 +56,11 @@ void Game::Update(float deltaTime)
     {
         UpdatePlayerProjectiles(deltaTime);
     }
+    else if(m_CurrentState == EGameState::GameOver)
+    {
+        UpdateEnemyProjectiles(deltaTime);
+        m_Level->Update(deltaTime);
+    }
 }
 
 void Game::ProcessInput(float deltaTime, const Input& input)
@@ -187,6 +192,7 @@ void Game::HandleGameLost()
 {
     m_CurrentState = EGameState::GameOver;
     m_PlayerProjectiles.clear();
+    m_Level->StopEnemiesAggression();
 }
 
 bool Game::HasGameEnded()
@@ -210,7 +216,10 @@ void Game::Restart()
 {
     m_CurrentState = EGameState::Playing;
     m_PlayerProjectiles.clear();
+    m_EnemyProjectiles.clear();
+    m_PlayerManager->Restart(WIDTH, HEIGHT);
     m_Level->Restart();
+    m_UIManager->Restart();
 }
 
 void Game::RemoveDestroyedProjectiles()

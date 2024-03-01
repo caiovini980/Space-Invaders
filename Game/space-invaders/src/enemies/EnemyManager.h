@@ -17,6 +17,7 @@ public:
     void Render(const SpriteRenderer& renderer);
     void HandleEnemyHit(GameObject& enemy);
     bool IsEveryEnemyKilled() const;
+    void StopAggression();
     void Restart();
 
     std::vector<GameObject>& GetEnemies() { return m_Enemies; }
@@ -65,6 +66,7 @@ private:
     int m_TotalEnemies{0};
     std::shared_ptr<Texture> m_ProjectileSprite;
     LevelDefinition m_Level;
+    bool bIsPassiveBehaviorEnabled{false};
 
     void MoveEnemies(float deltaTime);
     void MoveEnemiesDownwards();

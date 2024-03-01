@@ -16,6 +16,7 @@ public:
     void RenderInGameScreen(unsigned int playerLives) const;
     void RenderGameWinScreen() const;
     void RenderGameOverScreen(const SpriteRenderer& renderer) const;
+    void Restart() const;
 
 private:
 
@@ -27,4 +28,6 @@ private:
 
     GameObject m_GameEndedGUIBackground;
     std::shared_ptr<Texture> m_GameEndedGUIBackgroundSprite;
+
+    void RenderRestartMessage() const;
 };

@@ -20,6 +20,7 @@ public:
     void ProcessInput(float deltaTime, const Input& input, float boundsWidth);
     void Render(const SpriteRenderer& renderer) const;
     void HandlePlayerHit();
+    void Restart(float screenWidth, float screenHeight);
 
     GameObject& GetPlayer() const { return *m_Player; }
     
@@ -29,6 +30,7 @@ private:
     IProjectileHandler& m_ProjectileHandler;
     
     bool CheckIfCanShootAgain() const;
+    glm::vec2 CalculateStartPosition(float screenWidth, float screenHeight);
     
     const glm::vec2 PLAYER_SIZE = glm::vec2(60.0f, 60.0f);
     const glm::vec2 PLAYER_OFFSET = glm::vec2(20.0f, 20.0f);

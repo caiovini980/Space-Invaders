@@ -44,16 +44,29 @@ void UIManager::RenderGameWinScreen() const
     m_TextRenderer->RenderText("GOOD ENDING", 270, 200, 1.f, glm::vec3{0.0f, 1.0f, 0.0f});
     m_TextRenderer->RenderText("For you, can't say the same for the aliens...", 210, 250, 0.4f, glm::vec3{1.f});
 
+    RenderRestartMessage();
+}
+
+void UIManager::RenderGameOverScreen(const SpriteRenderer& renderer) const
+{
+    renderer.Draw( *m_GameEndedGUIBackgroundSprite, m_GameEndedGUIBackground.Position, m_GameEndedGUIBackground.Size);
+
+    m_TextRenderer->ChangeShader(m_DefaultTextShader);
+    m_TextRenderer->RenderText("BAD ENDING", 270, 200, 1.f, glm::vec3{1.0f, 0.0f, 0.0f});
+    m_TextRenderer->RenderText("There's nothing else you could do. The aliens are superior!", 150, 250, 0.4f, glm::vec3{1.f});
+
+    RenderRestartMessage();
+}
+
+void UIManager::RenderRestartMessage() const
+{
     m_BlinkTextShader->Bind();
     m_BlinkTextShader->SetUniform1f("u_Time", GameTime::Time);
     m_TextRenderer->ChangeShader(m_BlinkTextShader);
     m_TextRenderer->RenderText("Press R to restart", 20.f, 20.f, 0.5f, glm::vec3{1.f});
 }
 
-void UIManager::RenderGameOverScreen(const SpriteRenderer& renderer) const
+void UIManager::Restart() const
 {
-    renderer.Draw( *m_GameEndedGUIBackgroundSprite, m_GameEndedGUIBackground.Position, m_GameEndedGUIBackground.Size);
-    
-    m_TextRenderer->RenderText("BAD ENDING", 270, 200, 1.f, glm::vec3{1.0f, 0.0f, 0.0f});
-    m_TextRenderer->RenderText("There's nothing else you could do. The aliens are superior!", 150, 250, 0.4f, glm::vec3{1.f});
+    m_TextRenderer->ChangeShader(m_DefaultTextShader);
 }

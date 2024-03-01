@@ -27,9 +27,7 @@ void PlayerManager::CreatePlayer(float screenWidth, float screenHeight)
     
     m_PlayerSprite = ResourceManager::LoadTexture(playerTexturePath, playerTextureName, true);
     
-    const glm::vec2 playerInitialPosition = glm::vec2(
-        (screenWidth / 2.0f) - (PLAYER_SIZE.x / 2.0f),
-        screenHeight - PLAYER_SIZE.y - PLAYER_OFFSET.y);
+    const glm::vec2 playerInitialPosition = CalculateStartPosition(screenWidth, screenHeight);
     
     m_Player = std::make_shared<GameObject>(
         playerInitialPosition,
@@ -115,7 +113,23 @@ void PlayerManager::HandlePlayerHit()
     }
 }
 
+void PlayerManager::Restart(float screenWidth, float screenHeight)
+{
+    m_Player->Destroyed = false;
+    m_Player->Position = CalculateStartPosition(screenWidth, screenHeight);
+    m_PlayerCurrentLives = PLAYER_INITIAL_LIVES;
+}
+
 bool PlayerManager::CheckIfCanShootAgain() const
 {
     return GameTime::Time - m_LastShotTime >= SHOT_COOLDOWN;
+}
+
+glm::vec2 PlayerManager::CalculateStartPosition(float screenWidth, float screenHeight)
+{
+    const glm::vec2 playerInitialPosition = glm::vec2(
+            (screenWidth / 2.0f) - (PLAYER_SIZE.x / 2.0f),
+            screenHeight - PLAYER_SIZE.y - PLAYER_OFFSET.y);
+
+    return playerInitialPosition;
 }

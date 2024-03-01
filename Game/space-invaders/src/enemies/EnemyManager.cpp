@@ -59,7 +59,10 @@ void EnemyManager::MoveEnemies(float deltaTime)
 
     m_MovementDirection.x = -m_MovementDirection.x;
 
-    MoveEnemiesDownwards();
+    if(!bIsPassiveBehaviorEnabled)
+    {
+        MoveEnemiesDownwards();
+    }
 }
 
 void EnemyManager::MoveEnemiesDownwards()
@@ -72,7 +75,7 @@ void EnemyManager::MoveEnemiesDownwards()
 
 bool EnemyManager::CanShoot() const
 {
-    return GameTime::Time - m_LastShootTime >= m_ShootSecondsCooldown;
+    return !bIsPassiveBehaviorEnabled && GameTime::Time - m_LastShootTime >= m_ShootSecondsCooldown;
 }
 
 void EnemyManager::Shoot()
@@ -155,6 +158,11 @@ void EnemyManager::IncreaseDifficulty()
     m_MovementVelocity = INITIAL_MOVEMENT_VELOCITY * MOVEMENT_VELOCITY_MULTIPLIER_CURVE[m_CurrentDifficultyIndex];
 }
 
+void EnemyManager::StopAggression()
+{
+    bIsPassiveBehaviorEnabled = true;
+}
+
 bool EnemyManager::IsEveryEnemyKilled() const
 {
     return m_TotalEnemiesKilled >= m_TotalEnemies;
@@ -168,6 +176,7 @@ void EnemyManager::Restart()
     m_ShootSecondsCooldown = SHOOT_SECONDS_COOLDOWN_CURVE[0];
     m_LastShootTime = GameTime::Time;
     m_MovementDirection = INITIAL_MOVEMENT_DIRECTION;
+    bIsPassiveBehaviorEnabled = false;
 
     glm::vec2 startPosition = CalculateStartPosition(m_Level);
     int i = 0;
