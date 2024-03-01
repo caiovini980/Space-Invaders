@@ -644,6 +644,7 @@
     <None Include="src\vendor\glm\gtx\wrap.inl" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="res\audio\CyborgNinja.mp3" />
     <Content Include="res\fonts\dogicapixel.ttf" />
     <Content Include="res\fonts\dogicapixelbold.ttf" />
     <Content Include="res\shaders\Sprite.frag" />

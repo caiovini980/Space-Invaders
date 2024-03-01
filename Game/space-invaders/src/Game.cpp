@@ -4,6 +4,7 @@
 #include <memory>
 #include <GLFW/glfw3.h>
 
+#include "Audio.h"
 #include "GameLevel.h"
 #include "ResourceManager.h"
 #include "SpriteRenderer.h"
@@ -39,6 +40,8 @@ void Game::Init()
     m_BackgroundManager = std::make_unique<BackgroundManager>(WIDTH, HEIGHT);
     
     m_UIManager = std::make_unique<UIManager>(WIDTH, HEIGHT);
+
+    Audio::Play2DSound("res/audio/CyborgNinja.mp3", true);
 }
 
 void Game::Update(float deltaTime)
