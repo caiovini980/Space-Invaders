@@ -30,6 +30,9 @@ TextRenderer::TextRenderer(unsigned int width, unsigned int height, const std::s
     m_IBO = std::make_unique<IndexBuffer>(indices, 6);
 
     LoadFont(fontPath, fontSize);
+
+    m_VAO->Unbind();
+    m_VBO->Unbind();
 }
 
 TextRenderer::~TextRenderer()
@@ -50,6 +53,7 @@ TextRenderer::~TextRenderer()
 void TextRenderer::RenderText(const std::string& text, float x, float y, float scale, const glm::vec3& color)
 {
     m_VAO->Bind();
+    m_VBO->Bind();
 
     m_Shader->Bind();
     m_Shader->SetUniform3f("u_TextColor", color);
@@ -163,4 +167,5 @@ void TextRenderer::LoadFont(const std::string& fontPath, unsigned int fontSize)
     FT_Done_FreeType(freeType);
 
     GLCall(glPixelStorei(GL_UNPACK_ALIGNMENT, 4));
+    GLCall(glBindTexture(GL_TEXTURE_2D, 0));
 }

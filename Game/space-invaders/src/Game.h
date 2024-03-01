@@ -49,9 +49,10 @@ private:
     std::unique_ptr<GameLevel> m_Level;
     std::unique_ptr<UIManager> m_UIManager;
     
-    EGameState m_CurrentState{EGameState::Playing};
+    EGameState m_CurrentState{EGameState::MainMenu};
 
     bool TryCollidingWithBarriers(GameObject& projectile) const;
+    void StartGame();
     void HandleGameWon();
     void Restart();
     void RemoveDestroyedProjectiles();

@@ -64,6 +64,13 @@ void Game::Update(float deltaTime)
         UpdateEnemyProjectiles(deltaTime);
         m_Level->Update(deltaTime);
     }
+    else if(m_CurrentState == EGameState::MainMenu)
+    {
+        if(m_UIManager->IsPlayRequested())
+        {
+            StartGame();
+        }
+    }
 }
 
 void Game::ProcessInput(float deltaTime, const Input& input)
@@ -79,6 +86,10 @@ void Game::ProcessInput(float deltaTime, const Input& input)
     if (m_CurrentState == EGameState::Playing || m_CurrentState == EGameState::GameWin)
     {
         m_PlayerManager->ProcessInput(deltaTime, input, WIDTH);
+    }
+    else if(m_CurrentState == EGameState::MainMenu)
+    {
+        m_UIManager->ProcessMainMenuInput(input);
     }
 }
 
@@ -98,6 +109,13 @@ void Game::RenderProjectiles() const
 void Game::Render()
 {
     m_BackgroundManager->Render(*m_SpriteRenderer);
+
+    if(m_CurrentState == EGameState::MainMenu)
+    {
+        m_UIManager->RenderMainMenuScreen();
+        return;
+    }
+    
     m_Level->Render(*m_SpriteRenderer);
     m_PlayerManager->Render(*m_SpriteRenderer);
     
@@ -112,7 +130,7 @@ void Game::Render()
     {
         m_UIManager->RenderGameWinScreen();
     }
-    else if (m_CurrentState == EGameState::GameOver)
+    else if(m_CurrentState == EGameState::GameOver)
     {
         m_UIManager->RenderGameOverScreen(*m_SpriteRenderer);
     }
@@ -217,6 +235,12 @@ bool Game::TryCollidingWithBarriers(GameObject& projectile) const
     }
 
     return false;
+}
+
+void Game::StartGame()
+{
+    m_CurrentState = EGameState::Playing;
+    m_UIManager->ExitMainMenu();
 }
 
 void Game::HandleGameWon()
