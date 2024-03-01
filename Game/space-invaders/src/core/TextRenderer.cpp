@@ -10,13 +10,9 @@
 #include "glm/ext/matrix_clip_space.hpp"
 
 TextRenderer::TextRenderer(unsigned int width, unsigned int height, const std::string& fontPath, unsigned int fontSize, const std::shared_ptr<Shader>& shader)
-    : m_Shader(shader)
+    : m_Shader(shader), m_ScreenWidth(width), m_ScreenHeight(height)
 {
-    m_Shader->Bind();
-
-    glm::mat4 projection = glm::ortho(0.f, static_cast<float>(width), static_cast<float>(height), 0.f, -1.f, 1.f);
-    m_Shader->SetUniformMat4f("u_Projection", projection);
-    m_Shader->SetUniform1i("u_Text", 0);
+    SetupShader(m_Shader);
 
     m_VAO = std::make_unique<VertexArray>();
         
@@ -32,7 +28,6 @@ TextRenderer::TextRenderer(unsigned int width, unsigned int height, const std::s
         2, 3, 0
     };
     m_IBO = std::make_unique<IndexBuffer>(indices, 6);
-    
 
     LoadFont(fontPath, fontSize);
 }
@@ -89,6 +84,20 @@ void TextRenderer::RenderText(const std::string& text, float x, float y, float s
 
         x += (character.Advance >> 6) * scale;
     }
+}
+
+void TextRenderer::SetupShader(const std::shared_ptr<Shader>& shader) const
+{
+    shader->Bind();
+
+    glm::mat4 projection = glm::ortho(0.f, static_cast<float>(m_ScreenWidth), static_cast<float>(m_ScreenHeight), 0.f, -1.f, 1.f);
+    shader->SetUniformMat4f("u_Projection", projection);
+    shader->SetUniform1i("u_Text", 0);
+}
+
+void TextRenderer::ChangeShader(const std::shared_ptr<Shader>& shader)
+{
+    m_Shader = shader;
 }
 
 void TextRenderer::LoadFont(const std::string& fontPath, unsigned int fontSize)

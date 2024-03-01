@@ -16,13 +16,18 @@ public:
     void RenderInGameScreen(unsigned int playerLives) const;
     void RenderGameWinScreen() const;
     void RenderGameOverScreen(const SpriteRenderer& renderer) const;
+    void Restart() const;
 
 private:
 
     unsigned int m_ScreenWidth{0};
     unsigned int m_ScreenHeight{0};
     std::unique_ptr<TextRenderer> m_TextRenderer;
+    std::shared_ptr<Shader> m_DefaultTextShader;
+    std::shared_ptr<Shader> m_BlinkTextShader;
 
     GameObject m_GameEndedGUIBackground;
     std::shared_ptr<Texture> m_GameEndedGUIBackgroundSprite;
+
+    void RenderRestartMessage() const;
 };

@@ -650,6 +650,7 @@
     <Content Include="res\shaders\Sprite.vertex" />
     <Content Include="res\shaders\Text.frag" />
     <Content Include="res\shaders\Text.vertex" />
+    <Content Include="res\shaders\TextBlink.frag" />
     <Content Include="res\textures\awesomeface.png" />
     <Content Include="res\textures\background.png" />
     <Content Include="res\textures\block.png" />
