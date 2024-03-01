@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <memory>
+#include <GLFW/glfw3.h>
 
 #include "GameLevel.h"
 #include "ResourceManager.h"
@@ -55,10 +56,23 @@ void Game::Update(float deltaTime)
     {
         UpdatePlayerProjectiles(deltaTime);
     }
+    else if(m_CurrentState == EGameState::GameOver)
+    {
+        UpdateEnemyProjectiles(deltaTime);
+        m_Level->Update(deltaTime);
+    }
 }
 
-void Game::ProcessInput(float deltaTime, const Input& input) const
+void Game::ProcessInput(float deltaTime, const Input& input)
 {
+    if(m_CurrentState == EGameState::GameWin || m_CurrentState == EGameState::GameOver)
+    {
+        if(input.GetKey(GLFW_KEY_R))
+        {
+            Restart();
+        }
+    }
+
     if (m_CurrentState == EGameState::Playing || m_CurrentState == EGameState::GameWin)
     {
         m_PlayerManager->ProcessInput(deltaTime, input, WIDTH);
@@ -174,11 +188,12 @@ void Game::HandleGameWon()
     m_EnemyProjectiles.clear();
 }
 
-
 void Game::HandleGameLost()
 {
     m_CurrentState = EGameState::GameOver;
     m_PlayerProjectiles.clear();
+    m_PlayerManager->DestroyPlayer();
+    m_Level->StopEnemiesAggression();
 }
 
 bool Game::HasGameEnded()
@@ -189,12 +204,23 @@ bool Game::HasGameEnded()
         return true;
     }
 
-    if(m_PlayerManager->GetPlayer().Destroyed)
+    if(m_PlayerManager->GetPlayer().Destroyed || m_Level->HasEnemyReachedBottom())
     {
         HandleGameLost();
         return true;
     }
+
     return false;
+}
+
+void Game::Restart()
+{
+    m_CurrentState = EGameState::Playing;
+    m_PlayerProjectiles.clear();
+    m_EnemyProjectiles.clear();
+    m_PlayerManager->Restart(WIDTH, HEIGHT);
+    m_Level->Restart();
+    m_UIManager->Restart();
 }
 
 void Game::RemoveDestroyedProjectiles()

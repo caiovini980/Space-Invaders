@@ -8,7 +8,7 @@
 #include "utils/GameTime.h"
 
 EnemyManager::EnemyManager(unsigned levelWidth, unsigned levelHeight, const LevelDefinition& levelDefinition, IProjectileHandler& projectileHandler)
-    : m_LevelWidth(levelWidth), m_LevelHeight(levelHeight), m_ProjectileHandler(projectileHandler)
+    : m_LevelWidth(levelWidth), m_LevelHeight(levelHeight), m_ProjectileHandler(projectileHandler), m_Level(levelDefinition) 
 {
     SpawnEnemies(levelDefinition);
 
@@ -17,6 +17,7 @@ EnemyManager::EnemyManager(unsigned levelWidth, unsigned levelHeight, const Leve
     m_TotalEnemies = static_cast<int>(m_Enemies.size());
     m_MovementVelocity = INITIAL_MOVEMENT_VELOCITY * MOVEMENT_VELOCITY_MULTIPLIER_CURVE[0];
     m_ShootSecondsCooldown = SHOOT_SECONDS_COOLDOWN_CURVE[0];
+    m_MovementDirection = INITIAL_MOVEMENT_DIRECTION;
 }
 
 void EnemyManager::Update(float deltaTime)
@@ -58,20 +59,33 @@ void EnemyManager::MoveEnemies(float deltaTime)
 
     m_MovementDirection.x = -m_MovementDirection.x;
 
-    MoveEnemiesDownwards();
+    if(!bIsPassiveBehaviorEnabled)
+    {
+        MoveEnemiesDownwards();
+    }
 }
 
 void EnemyManager::MoveEnemiesDownwards()
 {
     for(GameObject& enemy : m_Enemies)
     {
+        if(enemy.Destroyed)
+        {
+            continue;
+        }
+
         enemy.Position.y += m_EnemySize.y / 2.f;
+
+        if(enemy.Position.y >= m_Level.GameOverBottomThreshold)
+        {
+            bHasEnemyReachedBottom = true;
+        }
     }
 }
 
 bool EnemyManager::CanShoot() const
 {
-    return GameTime::Time - m_LastShootTime >= m_ShootSecondsCooldown;
+    return !bIsPassiveBehaviorEnabled && GameTime::Time - m_LastShootTime >= m_ShootSecondsCooldown;
 }
 
 void EnemyManager::Shoot()
@@ -154,9 +168,49 @@ void EnemyManager::IncreaseDifficulty()
     m_MovementVelocity = INITIAL_MOVEMENT_VELOCITY * MOVEMENT_VELOCITY_MULTIPLIER_CURVE[m_CurrentDifficultyIndex];
 }
 
+void EnemyManager::StopAggression()
+{
+    bIsPassiveBehaviorEnabled = true;
+}
+
 bool EnemyManager::IsEveryEnemyKilled() const
 {
     return m_TotalEnemiesKilled >= m_TotalEnemies;
+}
+
+bool EnemyManager::HasEnemyReachedBottom() const
+{
+    return bHasEnemyReachedBottom;
+}
+
+void EnemyManager::Restart()
+{
+    m_TotalEnemiesKilled = 0;
+    m_CurrentDifficultyIndex = 0;
+    m_MovementVelocity = INITIAL_MOVEMENT_VELOCITY * MOVEMENT_VELOCITY_MULTIPLIER_CURVE[0];
+    m_ShootSecondsCooldown = SHOOT_SECONDS_COOLDOWN_CURVE[0];
+    m_LastShootTime = GameTime::Time;
+    m_MovementDirection = INITIAL_MOVEMENT_DIRECTION;
+    bIsPassiveBehaviorEnabled = false;
+    bHasEnemyReachedBottom = false;
+
+    glm::vec2 startPosition = CalculateStartPosition(m_Level);
+    int i = 0;
+    
+    for(unsigned int y = 0; y < m_Level.TotalEnemyRows; y++)
+    {
+        for(unsigned int x = 0; x < m_Level.TotalEnemyColumns; x++)
+        {
+            glm::vec2 position = startPosition;
+            position.x += (m_Level.Padding + m_EnemySize.x) * x;
+            position.y += (m_Level.Padding + m_EnemySize.y) * y;
+
+            m_Enemies[i].Position = position;
+            m_Enemies[i].Destroyed = false;
+
+            i++;
+        }
+    }
 }
 
 void EnemyManager::SpawnEnemies(const LevelDefinition& level)
@@ -164,9 +218,7 @@ void EnemyManager::SpawnEnemies(const LevelDefinition& level)
     std::shared_ptr<Texture> enemySprite = ResourceManager::LoadTexture("res/textures/enemy.png", "Enemy", true);
     
     m_EnemySize = CalculateEnemySize(level);
-    
-    float rowWidth = m_EnemySize.x * level.TotalEnemyColumns + level.Padding * level.TotalEnemyColumns;
-    glm::vec2 startPosition = {m_LevelWidth / 2.f - rowWidth / 2.f , level.TopMargin};
+    glm::vec2 startPosition = CalculateStartPosition(level);
 
     std::vector<glm::vec3> colorMapping{
         glm::vec3{0.7f, 0.f, 0.7f},
@@ -214,4 +266,12 @@ glm::vec2 EnemyManager::CalculateEnemySize(const LevelDefinition& level)
     desiredHeight = smallestSide;
     
     return glm::vec2{desiredWidth, desiredHeight};
+}
+
+glm::vec2 EnemyManager::CalculateStartPosition(const LevelDefinition& level)
+{
+    float rowWidth = m_EnemySize.x * level.TotalEnemyColumns + level.Padding * level.TotalEnemyColumns;
+    glm::vec2 startPosition = {m_LevelWidth / 2.f - rowWidth / 2.f , level.TopMargin};
+
+    return startPosition;
 }

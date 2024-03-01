@@ -8,4 +8,5 @@ struct LevelDefinition
     float HorizontalMargin;
     float TopMargin;
     float MinBottomMargin;
+    float GameOverBottomThreshold;
 };
