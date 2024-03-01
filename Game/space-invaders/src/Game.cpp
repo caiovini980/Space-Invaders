@@ -41,7 +41,7 @@ void Game::Init()
     
     m_UIManager = std::make_unique<UIManager>(WIDTH, HEIGHT);
 
-    Audio::Play2DSound("res/audio/CyborgNinja.mp3", true);
+    Audio::Play2DSound("res/sounds/cyborg-ninja.mp3", true);
 }
 
 void Game::Update(float deltaTime)
