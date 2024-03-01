@@ -113,6 +113,16 @@ void PlayerManager::HandlePlayerHit()
     }
 }
 
+void PlayerManager::DestroyPlayer() const
+{
+    if(m_Player->Destroyed)
+    {
+        return;
+    }
+
+    m_Player->Destroyed = true;
+}
+
 void PlayerManager::Restart(float screenWidth, float screenHeight)
 {
     m_Player->Destroyed = false;

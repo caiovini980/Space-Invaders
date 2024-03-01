@@ -192,6 +192,7 @@ void Game::HandleGameLost()
 {
     m_CurrentState = EGameState::GameOver;
     m_PlayerProjectiles.clear();
+    m_PlayerManager->DestroyPlayer();
     m_Level->StopEnemiesAggression();
 }
 
@@ -203,7 +204,7 @@ bool Game::HasGameEnded()
         return true;
     }
 
-    if(m_PlayerManager->GetPlayer().Destroyed)
+    if(m_PlayerManager->GetPlayer().Destroyed || m_Level->HasEnemyReachedBottom())
     {
         HandleGameLost();
         return true;

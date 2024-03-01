@@ -69,7 +69,17 @@ void EnemyManager::MoveEnemiesDownwards()
 {
     for(GameObject& enemy : m_Enemies)
     {
+        if(enemy.Destroyed)
+        {
+            continue;
+        }
+
         enemy.Position.y += m_EnemySize.y / 2.f;
+
+        if(enemy.Position.y >= m_Level.GameOverBottomThreshold)
+        {
+            bHasEnemyReachedBottom = true;
+        }
     }
 }
 
@@ -168,6 +178,11 @@ bool EnemyManager::IsEveryEnemyKilled() const
     return m_TotalEnemiesKilled >= m_TotalEnemies;
 }
 
+bool EnemyManager::HasEnemyReachedBottom() const
+{
+    return bHasEnemyReachedBottom;
+}
+
 void EnemyManager::Restart()
 {
     m_TotalEnemiesKilled = 0;
@@ -177,6 +192,7 @@ void EnemyManager::Restart()
     m_LastShootTime = GameTime::Time;
     m_MovementDirection = INITIAL_MOVEMENT_DIRECTION;
     bIsPassiveBehaviorEnabled = false;
+    bHasEnemyReachedBottom = false;
 
     glm::vec2 startPosition = CalculateStartPosition(m_Level);
     int i = 0;

@@ -20,6 +20,7 @@ public:
     void ProcessInput(float deltaTime, const Input& input, float boundsWidth);
     void Render(const SpriteRenderer& renderer) const;
     void HandlePlayerHit();
+    void DestroyPlayer() const;
     void Restart(float screenWidth, float screenHeight);
 
     GameObject& GetPlayer() const { return *m_Player; }
