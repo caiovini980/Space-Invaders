@@ -2,6 +2,7 @@
 
 #include <iostream>
 
+#include "Audio.h"
 #include "LevelDefinition.h"
 #include "ResourceManager.h"
 #include "interfaces/IProjectileHandler.h"
@@ -140,6 +141,7 @@ void EnemyManager::Render(const SpriteRenderer& renderer)
 
 void EnemyManager::HandleEnemyHit(GameObject& enemy)
 {
+    Audio::Play2DSound("./res/sounds/explosion.wav", false, 0.2f);
     enemy.Destroyed = true;
     m_TotalEnemiesKilled++;
 

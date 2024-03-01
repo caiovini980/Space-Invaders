@@ -651,7 +651,11 @@
     <Content Include="res\shaders\Text.frag" />
     <Content Include="res\shaders\Text.vertex" />
     <Content Include="res\shaders\TextBlink.frag" />
+    <Content Include="res\sounds\cyborg-ninja.mp3" />
+    <Content Include="res\sounds\explosion.wav" />
+    <Content Include="res\sounds\game-over.wav" />
     <Content Include="res\sounds\laser-shot.mp3" />
+    <Content Include="res\sounds\level-complete.mp3" />
     <Content Include="res\textures\awesomeface.png" />
     <Content Include="res\textures\background.png" />
     <Content Include="res\textures\block.png" />

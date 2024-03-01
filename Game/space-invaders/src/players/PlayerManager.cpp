@@ -107,6 +107,7 @@ void PlayerManager::HandlePlayerHit()
 
     if (m_PlayerCurrentLives <= 0)
     {
+        Audio::Play2DSound("./res/sounds/explosion.wav", false, 0.2f);
         m_Player->Destroyed = true;
     }
 }
