@@ -2,6 +2,7 @@
 
 #include <GLFW/glfw3.h>
 
+#include "Audio.h"
 #include "../ResourceManager.h"
 #include "../utils/GameTime.h"
 
@@ -72,19 +73,14 @@ void PlayerManager::ProcessInput(float deltaTime, const Input& input, float boun
 
 void PlayerManager::CreateProjectile()
 {
-    // set size
     constexpr glm::vec2 projectileSize = glm::vec2(20.0f, 20.0f);
-        
-    // set color
     constexpr glm::vec3 projectileColor = glm::vec3(0.5f, 1.0f, 1.0f);
+    constexpr float projectileSpeed = 800.0f;
+    const std::string shotSoundPath = "./res/sounds/laser-shot.mp3";
             
-    // set position
     m_ShotPosition = glm::vec2(
         m_Player->Position.x + (m_Player->Size.x / 2 - 10.0f),
         m_Player->Position.y - 30);
-
-    // set speed
-    constexpr float projectileSpeed = 800.0f;
             
     GameObject projectile {
         m_ShotPosition,
@@ -93,6 +89,8 @@ void PlayerManager::CreateProjectile()
         projectileColor,
         glm::vec2(projectileSpeed)
     };
+
+    Audio::Play2DSound(shotSoundPath, false);
             
     m_ProjectileHandler.AddPlayerProjectile(std::move(projectile));
 }
