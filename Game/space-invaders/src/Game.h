@@ -51,6 +51,7 @@ private:
     
     EGameState m_CurrentState{EGameState::Playing};
 
+    bool TryCollidingWithBarriers(GameObject& projectile) const;
     void HandleGameWon();
     void Restart();
     void RemoveDestroyedProjectiles();
