@@ -8,7 +8,7 @@ class Audio
 public:
 
     static void Init();
-    static void Play2DSound(const std::string& soundFilePath, bool bLoop = false);
+    static void Play2DSound(const std::string& soundFilePath, bool bLoop = false, float volume = 1.f);
 
 private:
 

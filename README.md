@@ -24,3 +24,9 @@ Caio Aguiar and Bruno Sanches
 | Enum                  | EName          |
 | Const & Static member | VARIABLE_NAME  |
 | Interface             | IName          |
+
+### Credits
+
+**Music:** "Cyborg Ninja" Kevin MacLeod (incompetech.com)
+Licensed under Creative Commons: By Attribution 4.0 License
+http://creativecommons.org/licenses/by/4.0/
