@@ -10,7 +10,9 @@
 #include "SpriteRenderer.h"
 #include "players/PlayerManager.h"
 #include "Collision.h"
+#include "Framebuffer.h"
 #include "background/BackgroundManager.h"
+#include "effects/PostProcessingManager.h"
 
 #include "glm/ext/matrix_clip_space.hpp"
 #include "ui/UIManager.h"
@@ -41,6 +43,11 @@ void Game::Init()
     
     m_UIManager = std::make_unique<UIManager>(WIDTH, HEIGHT);
 
+    m_PostProcessingManager = std::make_unique<PostProcessingManager>();
+    m_Framebuffer = std::make_unique<Framebuffer>(WIDTH, HEIGHT);
+
+    m_PostProcessingManager->SetGrayscaleEnabled(true);
+
     Audio::Play2DSound("res/sounds/cyborg-ninja.mp3", true, 0.2f);
 }
 
@@ -52,16 +59,20 @@ void Game::Update(float deltaTime)
 
         UpdatePlayerProjectiles(deltaTime);
         UpdateEnemyProjectiles(deltaTime);
+        RemoveDestroyedProjectiles();
         
         m_Level->Update(deltaTime);
     }
     else if(m_CurrentState == EGameState::GameWin)
     {
         UpdatePlayerProjectiles(deltaTime);
+        RemoveDestroyedProjectiles();
     }
     else if(m_CurrentState == EGameState::GameOver)
     {
         UpdateEnemyProjectiles(deltaTime);
+        RemoveDestroyedProjectiles();
+
         m_Level->Update(deltaTime);
     }
     else if(m_CurrentState == EGameState::MainMenu)
@@ -108,11 +119,17 @@ void Game::RenderProjectiles() const
 
 void Game::Render()
 {
+    m_Framebuffer->BindAndClear();
+
     m_BackgroundManager->Render(*m_SpriteRenderer);
 
     if(m_CurrentState == EGameState::MainMenu)
     {
+        m_Framebuffer->Unbind();
+        m_PostProcessingManager->RenderWithPostProcessing(m_Framebuffer->GetColorBufferTexture());
+
         m_UIManager->RenderMainMenuScreen();
+
         return;
     }
     
@@ -120,7 +137,9 @@ void Game::Render()
     m_PlayerManager->Render(*m_SpriteRenderer);
     
     RenderProjectiles();
-    RemoveDestroyedProjectiles();
+
+    m_Framebuffer->Unbind();
+    m_PostProcessingManager->RenderWithPostProcessing(m_Framebuffer->GetColorBufferTexture());
 
     if(m_CurrentState == EGameState::Playing)
     {
@@ -134,6 +153,7 @@ void Game::Render()
     {
         m_UIManager->RenderGameOverScreen(*m_SpriteRenderer);
     }
+
 }
 
 void Game::Close()

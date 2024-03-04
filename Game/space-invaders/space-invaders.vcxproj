@@ -167,7 +167,9 @@
     <ClCompile Include="src\Audio.cpp" />
     <ClCompile Include="src\background\BackgroundManager.cpp" />
     <ClCompile Include="src\core\Core.cpp" />
+    <ClCompile Include="src\core\Framebuffer.cpp" />
     <ClCompile Include="src\core\IndexBuffer.cpp" />
+    <ClCompile Include="src\core\ScreenRenderer.cpp" />
     <ClCompile Include="src\core\Shader.cpp" />
     <ClCompile Include="src\core\SpriteRenderer.cpp" />
     <ClCompile Include="src\core\TextRenderer.cpp" />
@@ -175,6 +177,7 @@
     <ClCompile Include="src\core\VertexArray.cpp" />
     <ClCompile Include="src\core\VertexBuffer.cpp" />
     <ClCompile Include="src\core\VertexBufferLayout.cpp" />
+    <ClCompile Include="src\effects\PostProcessingManager.cpp" />
     <ClCompile Include="src\enemies\EnemyManager.cpp" />
     <ClCompile Include="src\Game.cpp" />
     <ClCompile Include="src\GameLevel.cpp" />
@@ -195,7 +198,9 @@
     <ClInclude Include="src\background\BackgroundManager.h" />
     <ClInclude Include="src\Collision.h" />
     <ClInclude Include="src\core\Core.h" />
+    <ClInclude Include="src\core\Framebuffer.h" />
     <ClInclude Include="src\core\IndexBuffer.h" />
+    <ClInclude Include="src\core\ScreenRenderer.h" />
     <ClInclude Include="src\core\Shader.h" />
     <ClInclude Include="src\core\SpriteRenderer.h" />
     <ClInclude Include="src\core\TextRenderer.h" />
@@ -203,6 +208,7 @@
     <ClInclude Include="src\core\VertexArray.h" />
     <ClInclude Include="src\core\VertexBuffer.h" />
     <ClInclude Include="src\core\VertexBufferLayout.h" />
+    <ClInclude Include="src\effects\PostProcessingManager.h" />
     <ClInclude Include="src\EGameState.h" />
     <ClInclude Include="src\enemies\EnemyManager.h" />
     <ClInclude Include="src\Game.h" />
@@ -648,6 +654,8 @@
   <ItemGroup>
     <Content Include="res\fonts\dogicapixel.ttf" />
     <Content Include="res\fonts\dogicapixelbold.ttf" />
+    <Content Include="res\shaders\PostProcessing.frag" />
+    <Content Include="res\shaders\PostProcessing.vertex" />
     <Content Include="res\shaders\Sprite.frag" />
     <Content Include="res\shaders\Sprite.vertex" />
     <Content Include="res\shaders\SpriteBreaking.frag" />
