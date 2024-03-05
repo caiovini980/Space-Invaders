@@ -43,7 +43,12 @@ SpriteRenderer::~SpriteRenderer()
 
 void SpriteRenderer::Draw(Texture& texture, glm::vec2 position, glm::vec2 size, float rotate, glm::vec3 color) const
 {
-    m_Shader->Bind();
+    Draw(*m_Shader, texture, position, size, rotate, color);
+}
+
+void SpriteRenderer::Draw(Shader& shader, Texture& texture, glm::vec2 position, glm::vec2 size, float rotate, glm::vec3 color) const
+{
+    shader.Bind();
 
     glm::mat4 model{1.f};
     model = glm::translate(model, glm::vec3(position, 0.f));
@@ -55,8 +60,8 @@ void SpriteRenderer::Draw(Texture& texture, glm::vec2 position, glm::vec2 size, 
 
     model = glm::scale(model, glm::vec3(size, 1.f));
 
-    m_Shader->SetUniformMat4f("u_Model", model);
-    m_Shader->SetUniform3f("u_SpriteColor", color);
+    shader.SetUniformMat4f("u_Model", model);
+    shader.SetUniform3f("u_SpriteColor", color);
 
     texture.Bind(0);
 

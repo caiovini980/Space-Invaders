@@ -182,6 +182,7 @@
     <ClCompile Include="src\GameObject.cpp" />
     <ClCompile Include="src\Input.cpp" />
     <ClCompile Include="src\interfaces\IProjectileHandler.cpp" />
+    <ClCompile Include="src\level\Barrier.cpp" />
     <ClCompile Include="src\players\PlayerManager.cpp" />
     <ClCompile Include="src\ResourceManager.cpp" />
     <ClCompile Include="src\ui\UIManager.cpp" />
@@ -213,6 +214,7 @@
     <ClInclude Include="src\Input.h" />
     <ClInclude Include="src\interfaces\IProjectileHandler.h" />
     <ClInclude Include="src\LevelDefinition.h" />
+    <ClInclude Include="src\level\Barrier.h" />
     <ClInclude Include="src\players\PlayerManager.h" />
     <ClInclude Include="src\ResourceManager.h" />
     <ClInclude Include="src\ui\UIManager.h" />
@@ -654,6 +656,7 @@
     <Content Include="res\shaders\PlayerParticle.vertex.glsl" />
     <Content Include="res\shaders\Sprite.frag" />
     <Content Include="res\shaders\Sprite.vertex" />
+    <Content Include="res\shaders\SpriteBreaking.frag" />
     <Content Include="res\shaders\Text.frag" />
     <Content Include="res\shaders\Text.vertex" />
     <Content Include="res\shaders\TextBlink.frag" />
@@ -665,6 +668,7 @@
     <Content Include="res\textures\awesomeface.png" />
     <Content Include="res\textures\background.png" />
     <Content Include="res\textures\block.png" />
+    <Content Include="res\textures\block_breaking.png" />
     <Content Include="res\textures\endgameGuiBackground.png" />
     <Content Include="res\textures\enemy.png" />
     <Content Include="res\textures\hit-particle.png" />

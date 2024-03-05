@@ -14,3 +14,8 @@ void GameObject::Draw(const SpriteRenderer& renderer) const
 {
     renderer.Draw(*m_Sprite, Position, Size, Rotation, Color);
 }
+
+void GameObject::Draw(const SpriteRenderer& renderer, Shader& shader) const
+{
+    renderer.Draw(shader, *m_Sprite, Position, Size, Rotation, Color);
+}

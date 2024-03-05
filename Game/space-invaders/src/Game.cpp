@@ -143,11 +143,16 @@ void Game::UpdatePlayerProjectiles(float deltaTime)
         if (projectile.Position.y <= 0)
         {
             projectile.Destroyed = true;
+            continue;
         }
-        else
+
+        if(TryCollidingWithBarriers(projectile))
         {
-            CheckEnemyCollisions(projectile);
+            projectile.Destroyed = true;
+            continue;
         }
+
+        CheckEnemyCollisions(projectile);
     }
 }
 
@@ -162,6 +167,13 @@ void Game::UpdateEnemyProjectiles(float deltaTime)
         if(projectile.Position.y > HEIGHT + projectile.Size.y)
         {
             projectile.Destroyed = true;
+            continue;
+        }
+
+        if(TryCollidingWithBarriers(projectile))
+        {
+            projectile.Destroyed = true;
+            continue;
         }
 
         if (player.Destroyed) { continue; }
@@ -184,6 +196,28 @@ void Game::CheckEnemyCollisions(GameObject& projectile) const
 
         break;
     }
+}
+
+bool Game::TryCollidingWithBarriers(GameObject& projectile) const
+{
+    for (Barrier& barrier : m_Level->GetBarriers())
+    {
+        if(barrier.Destroyed)
+        {
+            continue;
+        }
+
+        if(!Collision::IsColliding(projectile, barrier))
+        {
+            continue;
+        }
+
+        m_Level->HandleBarrierHit(barrier);
+
+        return true;
+    }
+
+    return false;
 }
 
 void Game::HandleGameWon()
