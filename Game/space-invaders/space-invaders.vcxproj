@@ -652,8 +652,6 @@
   <ItemGroup>
     <Content Include="res\fonts\dogicapixel.ttf" />
     <Content Include="res\fonts\dogicapixelbold.ttf" />
-    <Content Include="res\shaders\PlayerParticle.frag.glsl" />
-    <Content Include="res\shaders\PlayerParticle.vertex.glsl" />
     <Content Include="res\shaders\Sprite.frag" />
     <Content Include="res\shaders\Sprite.vertex" />
     <Content Include="res\shaders\SpriteBreaking.frag" />
