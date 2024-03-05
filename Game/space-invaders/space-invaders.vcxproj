@@ -659,6 +659,8 @@
     <Content Include="res\shaders\Sprite.frag" />
     <Content Include="res\shaders\Sprite.vertex" />
     <Content Include="res\shaders\SpriteBreaking.frag" />
+    <Content Include="res\shaders\SpriteDynamic.vertex" />
+    <Content Include="res\shaders\SpriteDynamic.frag" />
     <Content Include="res\shaders\Text.frag" />
     <Content Include="res\shaders\Text.vertex" />
     <Content Include="res\shaders\TextBlink.frag" />

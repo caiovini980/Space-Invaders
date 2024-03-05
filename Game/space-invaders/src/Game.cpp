@@ -32,6 +32,11 @@ void Game::Init()
     glm::mat4 ortho = glm::ortho(0.f, WIDTH, HEIGHT, 0.f, -1.f, 1.f);
     spriteShader->SetUniformMat4f("u_Projection", ortho);
     spriteShader->SetUniform1i("u_Image", 0);
+
+    std::shared_ptr<Shader> dynamicSpriteShader = ResourceManager::LoadShader("res/shaders/SpriteDynamic.vertex", "res/shaders/SpriteDynamic.frag", "Dynamic");
+    dynamicSpriteShader->Bind();
+    dynamicSpriteShader->SetUniformMat4f("u_Projection", ortho);
+    dynamicSpriteShader->SetUniform1i("u_Image", 0);
     
     m_SpriteRenderer = std::make_unique<SpriteRenderer>(spriteShader);
     
@@ -46,7 +51,7 @@ void Game::Init()
     m_PostProcessingManager = std::make_unique<PostProcessingManager>();
     m_Framebuffer = std::make_unique<Framebuffer>(WIDTH, HEIGHT);
 
-    m_PostProcessingManager->SetGrayscaleEnabled(true);
+    m_PostProcessingManager->SetGrayscaleEnabled(false);
 
     Audio::Play2DSound("res/sounds/cyborg-ninja.mp3", true, 0.2f);
 }
@@ -126,7 +131,7 @@ void Game::Render()
     if(m_CurrentState == EGameState::MainMenu)
     {
         m_Framebuffer->Unbind();
-        m_PostProcessingManager->RenderWithPostProcessing(m_Framebuffer->GetColorBufferTexture());
+        m_PostProcessingManager->RenderWithPostProcessing(*m_Framebuffer);
 
         m_UIManager->RenderMainMenuScreen();
 
@@ -139,7 +144,7 @@ void Game::Render()
     RenderProjectiles();
 
     m_Framebuffer->Unbind();
-    m_PostProcessingManager->RenderWithPostProcessing(m_Framebuffer->GetColorBufferTexture());
+    m_PostProcessingManager->RenderWithPostProcessing(*m_Framebuffer);
 
     if(m_CurrentState == EGameState::Playing)
     {
@@ -153,7 +158,6 @@ void Game::Render()
     {
         m_UIManager->RenderGameOverScreen(*m_SpriteRenderer);
     }
-
 }
 
 void Game::Close()

@@ -4,26 +4,32 @@
 
 #include "Core.h"
 
-Framebuffer::Framebuffer(unsigned int width, unsigned int height)
+Framebuffer::Framebuffer(unsigned width, unsigned height, glm::vec4 clearColor)
+    : m_ClearColor(clearColor)
 {
     GLCall(glGenFramebuffers(1, &m_FBO));
     GLCall(glBindFramebuffer(GL_FRAMEBUFFER, m_FBO));
 
-    GLCall(glGenTextures(1, &m_ColorBufferTexture));
-    GLCall(glBindTexture(GL_TEXTURE_2D, m_ColorBufferTexture));
+    GLCall(glGenTextures(1, &m_ColorBufferTexture0));
+    GLCall(glBindTexture(GL_TEXTURE_2D, m_ColorBufferTexture0));
     GLCall(glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, nullptr));
     GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
     GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
     GLCall(glBindTexture(GL_TEXTURE_2D, 0));
 
-    GLCall(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_ColorBufferTexture, 0));
+    GLCall(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, m_ColorBufferTexture0, 0));
 
-    GLCall(glGenRenderbuffers(1, &m_RBO));
-    GLCall(glBindRenderbuffer(GL_RENDERBUFFER, m_RBO));
-    GLCall(glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, static_cast<int>(width), static_cast<int>(height)));
-    GLCall(glBindRenderbuffer(GL_RENDERBUFFER, 0));
+    GLCall(glGenTextures(1, &m_ColorBufferTexture1));
+    GLCall(glBindTexture(GL_TEXTURE_2D, m_ColorBufferTexture1));
+    GLCall(glTexImage2D(GL_TEXTURE_2D, 0, GL_RG32F, width, height, 0, GL_RG, GL_FLOAT, nullptr));
+    GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR));
+    GLCall(glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR));
+    GLCall(glBindTexture(GL_TEXTURE_2D, 0));
 
-    glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, m_RBO);
+    GLCall(glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT1, GL_TEXTURE_2D, m_ColorBufferTexture1, 0));
+
+    GLenum drawBuffers[] = { GL_COLOR_ATTACHMENT0, GL_COLOR_ATTACHMENT1};
+    GLCall(glDrawBuffers(2, drawBuffers));
     
     if(glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE)
     {
@@ -38,8 +44,8 @@ Framebuffer::~Framebuffer()
     Unbind();
 
     GLCall(glDeleteFramebuffers(1, &m_FBO));
-    GLCall(glDeleteRenderbuffers(1, &m_RBO));
-    GLCall(glDeleteTextures(1, &m_ColorBufferTexture));
+    GLCall(glDeleteTextures(1, &m_ColorBufferTexture0));
+    GLCall(glDeleteTextures(1, &m_ColorBufferTexture1));
 }
 
 void Framebuffer::Bind() const
@@ -51,7 +57,7 @@ void Framebuffer::BindAndClear() const
 {
     Bind();
 
-    GLCall(glClearColor(0.f, 0.f, 0.f, 1.f));
+    GLCall(glClearColor(m_ClearColor.r, m_ClearColor.g, m_ClearColor.b, m_ClearColor.a));
     GLCall(glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT));
 }
 

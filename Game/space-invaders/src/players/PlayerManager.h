@@ -18,7 +18,7 @@ public:
     void CreatePlayer(float screenWidth, float screenHeight);
     void CreateProjectile();
     void ProcessInput(float deltaTime, const Input& input, float boundsWidth);
-    void Render(const SpriteRenderer& renderer) const;
+    void Render(const SpriteRenderer& renderer);
     void HandlePlayerHit();
     void DestroyPlayer() const;
     void Restart(float screenWidth, float screenHeight);
@@ -46,10 +46,12 @@ private:
     std::shared_ptr<GameObject> m_Player;
     std::shared_ptr<Texture> m_PlayerSprite;
     std::shared_ptr<Texture> m_ProjectileSprite;
+    std::shared_ptr<Shader> m_PlayerShader;
 
     glm::vec2 m_ShotPosition;
     
     float m_LastShotTime = 0.0f;
     
     int m_PlayerCurrentLives = 3;
+    glm::vec2 m_PlayerPreviousPosition{0.f};
 };

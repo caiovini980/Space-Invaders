@@ -1,6 +1,7 @@
 #version 330 core
 
-layout(location = 0) out vec4 o_Color;
+layout (location = 0) out vec4 o_Color;
+layout (location = 1) out vec2 o_Velocity;
 
 in vec2 v_UV;
 
@@ -19,4 +20,6 @@ void main()
     vec4 spriteColor = vec4(u_SpriteColor, 1.f);
 
     o_Color = mix(textureColor, breakingColor, breakingColor.a) * spriteColor;
+
+    o_Velocity = vec2(0.f, 0.f);
 }

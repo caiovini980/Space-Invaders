@@ -5,6 +5,8 @@
 #include "Audio.h"
 #include "../ResourceManager.h"
 #include "../utils/GameTime.h"
+#include "glm/ext/matrix_clip_space.hpp"
+#include "glm/ext/matrix_transform.hpp"
 
 PlayerManager::PlayerManager(IProjectileHandler& projectileHandler)
     : m_ProjectileHandler(projectileHandler)
@@ -14,6 +16,8 @@ PlayerManager::PlayerManager(IProjectileHandler& projectileHandler)
         "Projectile",
         true
     );
+
+    m_PlayerShader = ResourceManager::GetShader("Dynamic");
 }
 
 PlayerManager::~PlayerManager()
@@ -39,6 +43,7 @@ void PlayerManager::CreatePlayer(float screenWidth, float screenHeight)
         );
     
     m_PlayerCurrentLives = PLAYER_INITIAL_LIVES;
+    m_PlayerPreviousPosition = playerInitialPosition;
 }
 
 void PlayerManager::ProcessInput(float deltaTime, const Input& input, float boundsWidth)
@@ -95,10 +100,18 @@ void PlayerManager::CreateProjectile()
     m_ProjectileHandler.AddPlayerProjectile(std::move(projectile));
 }
 
-void PlayerManager::Render(const SpriteRenderer& renderer) const
+void PlayerManager::Render(const SpriteRenderer& renderer) 
 {
     if (m_Player->Destroyed) return;
-    renderer.Draw(*m_PlayerSprite, m_Player->Position, m_Player->Size, m_Player->Rotation, m_Player->Color);
+
+    m_PlayerShader->Bind();
+    glm::mat4 previousModel = glm::mat4{1.f};
+    previousModel = glm::translate(previousModel, glm::vec3{m_PlayerPreviousPosition, 0.f});
+    previousModel = glm::scale(previousModel, glm::vec3(m_Player->Size, 1.f));
+    m_PlayerShader->SetUniformMat4f("u_PreviousModel", previousModel);
+    m_PlayerPreviousPosition = m_Player->Position;
+
+    renderer.Draw(*m_PlayerShader, *m_PlayerSprite, m_Player->Position, m_Player->Size, m_Player->Rotation, m_Player->Color);
 }
 
 void PlayerManager::HandlePlayerHit()
@@ -126,6 +139,7 @@ void PlayerManager::Restart(float screenWidth, float screenHeight)
 {
     m_Player->Destroyed = false;
     m_Player->Position = CalculateStartPosition(screenWidth, screenHeight);
+    m_PlayerPreviousPosition = m_Player->Position;
     m_PlayerCurrentLives = PLAYER_INITIAL_LIVES;
 }
 

@@ -1,6 +1,7 @@
 #pragma once
 #include <memory>
 
+class Framebuffer;
 class Shader;
 #include "ScreenRenderer.h"
 
@@ -11,7 +12,7 @@ public:
     PostProcessingManager();
 
     void SetGrayscaleEnabled(bool bEnable);
-    void RenderWithPostProcessing(unsigned int screenTexture);
+    void RenderWithPostProcessing(const Framebuffer& framebuffer);
 
     inline bool IsGrayscaleEnabled() const { return bIsGrayscaleEnabled; }
 
