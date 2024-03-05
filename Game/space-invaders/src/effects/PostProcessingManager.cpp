@@ -24,8 +24,10 @@ void PostProcessingManager::SetGrayscaleEnabled(bool bEnable)
 
 void PostProcessingManager::RenderWithPostProcessing(const Framebuffer& framebuffer)
 {
-    GLCall(glActiveTexture(GL_TEXTURE1));
-    GLCall(glBindTexture(GL_TEXTURE_2D, framebuffer.GetColorBufferTexture1()));
+    constexpr unsigned int VELOCITY_TEXTURE_INDEX = 0;
 
-    m_ScreenRenderer->Draw(framebuffer.GetColorBufferTexture0());
+    GLCall(glActiveTexture(GL_TEXTURE1));
+    GLCall(glBindTexture(GL_TEXTURE_2D, framebuffer.GetAdditionalColorTexture(VELOCITY_TEXTURE_INDEX)));
+
+    m_ScreenRenderer->Draw(framebuffer.GetMainColorBufferTexture());
 }

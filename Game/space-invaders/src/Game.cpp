@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <memory>
+#include "Core.h"
 #include <GLFW/glfw3.h>
 
 #include "Audio.h"
@@ -49,7 +50,11 @@ void Game::Init()
     m_UIManager = std::make_unique<UIManager>(WIDTH, HEIGHT);
 
     m_PostProcessingManager = std::make_unique<PostProcessingManager>();
-    m_Framebuffer = std::make_unique<Framebuffer>(WIDTH, HEIGHT);
+    
+    std::vector<TextureDefinition> framebufferAdditionalTextures {
+        {GL_RG32F, GL_RG, GL_FLOAT}
+    };
+    m_Framebuffer = std::make_unique<Framebuffer>(WIDTH, HEIGHT, framebufferAdditionalTextures);
 
     m_PostProcessingManager->SetGrayscaleEnabled(false);
 
