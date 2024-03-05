@@ -17,24 +17,8 @@ void ParticleEmitter::Update(float deltaTime)
     // move the particles
     for (int i = 0; i < m_AmountOfParticles; i++)
     {
-        if (m_ParticleProps[i].Direction.x > 0.0f)
-        {
-            m_ParticleProps[i].Object.Position.x += m_ParticleProps[i].Speed * deltaTime * m_ParticleProps[i].Direction.x; 
-        }
-        if (m_ParticleProps[i].Direction.x < 0.0f)
-        {
-            m_ParticleProps[i].Object.Position.x -= m_ParticleProps[i].Speed * deltaTime * m_ParticleProps[i].Direction.x; 
-        }
-
-        if (m_ParticleProps[i].Direction.y > 0.0f)
-        {
-            m_ParticleProps[i].Object.Position.y += m_ParticleProps[i].Speed * deltaTime * m_ParticleProps[i].Direction.y; 
-        }
-        if (m_ParticleProps[i].Direction.y < 0.0f)
-        {
-            m_ParticleProps[i].Object.Position.y -= m_ParticleProps[i].Speed * deltaTime * m_ParticleProps[i].Direction.y; 
-        }
-
+        m_ParticleProps[i].Object.Position += m_ParticleProps[i].Speed * deltaTime * m_ParticleProps[i].Direction;
+        
         if (GameTime::Time - m_ParticleProps[i].SpawnedTime >= m_ParticleProps[i].TimeToFadeAway)
         {
             m_ParticleProps[i].Object.Destroyed = true;
