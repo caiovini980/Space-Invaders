@@ -7,14 +7,11 @@
 ParticleEmitter::ParticleEmitter(const char* spritePath)
 {
     m_ParticleSprite = ResourceManager::LoadTexture(spritePath, "PlayerParticle", true);
-    
-    // spawn particles
     SpawnParticles();
 }
 
 void ParticleEmitter::Update(float deltaTime)
 {
-    // move the particles
     for (int i = 0; i < m_AmountOfParticles; i++)
     {
         m_ParticleProps[i].Object.Position += m_ParticleProps[i].Speed * deltaTime * m_ParticleProps[i].Direction;
@@ -28,7 +25,6 @@ void ParticleEmitter::Update(float deltaTime)
 
 void ParticleEmitter::Render(const SpriteRenderer& renderer)
 {
-    // draw particles
     for (const auto& particle : m_ParticleProps)
     {
         if (!particle.Object.Destroyed)
@@ -40,8 +36,6 @@ void ParticleEmitter::Render(const SpriteRenderer& renderer)
 
 void ParticleEmitter::Emit(const GameObject& source)
 {
-    // reset position
-    // show particles
     for (int i = 0; i < m_AmountOfParticles; i++)
     {
         m_ParticleProps[i].SpawnedTime = GameTime::Time;
@@ -64,7 +58,6 @@ void ParticleEmitter::SpawnParticles()
     {
         constexpr glm::vec2 size = glm::vec2(20.0f, 20.0f);
         constexpr glm::vec3 color = glm::vec3(1.0f, 1.0f, 0.0f);
-        constexpr float speed = 80.0f;
         glm::vec2 position = glm::vec2(1000.f); // outside the screen
             
         GameObject newParticle {
