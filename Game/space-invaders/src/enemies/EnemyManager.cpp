@@ -4,6 +4,7 @@
 
 #include "Audio.h"
 #include "LevelDefinition.h"
+#include "ParticleEmitter.h"
 #include "ResourceManager.h"
 #include "interfaces/IProjectileHandler.h"
 #include "utils/GameTime.h"
@@ -19,10 +20,21 @@ EnemyManager::EnemyManager(unsigned levelWidth, unsigned levelHeight, const Leve
     m_MovementVelocity = INITIAL_MOVEMENT_VELOCITY * MOVEMENT_VELOCITY_MULTIPLIER_CURVE[0];
     m_ShootSecondsCooldown = SHOOT_SECONDS_COOLDOWN_CURVE[0];
     m_MovementDirection = INITIAL_MOVEMENT_DIRECTION;
+
+    for (int i = 0; i < 3; i++)
+    {
+        Emmiter newEmitter = { std::make_shared<ParticleEmitter>("res/textures/hit-particle.png"), true };
+        m_ParticleEmitters.emplace_back(newEmitter);
+    }
 }
 
 void EnemyManager::Update(float deltaTime)
 {
+    for (const auto& particleEmmiter : m_ParticleEmitters)
+    {
+        particleEmmiter.ParticleEmitterPtr->Update(deltaTime);
+    }
+    
     MoveEnemies(deltaTime);
 
     if(CanShoot())
@@ -134,6 +146,11 @@ void EnemyManager::Render(const SpriteRenderer& renderer)
 {
     for(const GameObject& enemy : m_Enemies)
     {
+        for (const auto& particleEmmiter : m_ParticleEmitters)
+        {
+            particleEmmiter.ParticleEmitterPtr->Render(renderer);
+        }
+        
         if (enemy.Destroyed) continue;
         enemy.Draw(renderer);
     }
@@ -143,8 +160,29 @@ void EnemyManager::HandleEnemyHit(GameObject& enemy)
 {
     m_TotalEnemiesKilled++;
     enemy.Destroyed = true;
-    
+
     Audio::Play2DSound("./res/sounds/explosion.wav", false, 0.2f);
+
+    bool bFoundAvailableEmitter = false;
+    for (auto& particleEmmiter : m_ParticleEmitters)
+    {
+        if (!particleEmmiter.CanEmmit) continue;
+        
+        particleEmmiter.ParticleEmitterPtr->Emit(enemy);
+        particleEmmiter.CanEmmit = false;
+        bFoundAvailableEmitter = true;
+        break;
+    }
+
+    if (!bFoundAvailableEmitter)
+    {
+        for (auto& particleEmmiter : m_ParticleEmitters)
+        {
+            particleEmmiter.CanEmmit = true;
+        }
+
+        HandleEnemyHit(enemy);
+    }
     
     IncreaseDifficulty();
 }

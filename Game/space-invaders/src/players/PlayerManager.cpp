@@ -39,6 +39,8 @@ void PlayerManager::CreatePlayer(float screenWidth, float screenHeight)
         );
     
     m_PlayerCurrentLives = PLAYER_INITIAL_LIVES;
+    
+    m_ParticleEmitter = std::make_unique<ParticleEmitter>("res/textures/hit-particle.png");
 }
 
 void PlayerManager::ProcessInput(float deltaTime, const Input& input, float boundsWidth)
@@ -97,14 +99,27 @@ void PlayerManager::CreateProjectile()
 
 void PlayerManager::Render(const SpriteRenderer& renderer) const
 {
-    if (m_Player->Destroyed) return;
+    m_ParticleEmitter->Render(renderer);
+    
+    if (m_Player->Destroyed)
+    {
+        return;
+    }
+    
     renderer.Draw(*m_PlayerSprite, m_Player->Position, m_Player->Size, m_Player->Rotation, m_Player->Color);
+}
+
+void PlayerManager::Update(float deltaTime)
+{
+    m_ParticleEmitter->Update(deltaTime);
 }
 
 void PlayerManager::HandlePlayerHit()
 {
     m_PlayerCurrentLives -= 1;
 
+    m_ParticleEmitter->Emit(*m_Player);
+    
     if (m_PlayerCurrentLives <= 0)
     {
         Audio::Play2DSound("./res/sounds/explosion.wav", false, 0.2f);

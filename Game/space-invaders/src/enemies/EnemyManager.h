@@ -1,6 +1,8 @@
 #pragma once
+#include <map>
 #include <vector>
 
+#include "ParticleEmitter.h"
 #include "../GameObject.h"
 #include "../LevelDefinition.h"
 
@@ -79,4 +81,12 @@ private:
     void SpawnEnemies(const LevelDefinition& level);
     glm::vec2 CalculateEnemySize(const LevelDefinition& level);
     glm::vec2 CalculateStartPosition(const LevelDefinition& level);
+
+    struct Emmiter
+    {
+        std::shared_ptr<ParticleEmitter> ParticleEmitterPtr;
+        bool CanEmmit;
+    };
+    
+    std::vector<Emmiter> m_ParticleEmitters; // map <Emitter, canEmit>
 };

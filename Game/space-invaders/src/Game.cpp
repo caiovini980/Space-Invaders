@@ -52,7 +52,8 @@ void Game::Update(float deltaTime)
 
         UpdatePlayerProjectiles(deltaTime);
         UpdateEnemyProjectiles(deltaTime);
-        
+
+        m_PlayerManager->Update(deltaTime);
         m_Level->Update(deltaTime);
     }
     else if(m_CurrentState == EGameState::GameWin)
