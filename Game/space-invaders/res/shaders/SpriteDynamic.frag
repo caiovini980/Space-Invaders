@@ -12,10 +12,11 @@ uniform vec3 u_SpriteColor;
 
 void main()
 {          
-    o_Color = vec4(u_SpriteColor, 1.f) * texture(u_Image, v_UV);
+    vec4 textureColor = texture(u_Image, v_UV);
+    o_Color = vec4(u_SpriteColor, 1.f) * textureColor;
 
     vec3 pos = (v_ClipSpacePosition / v_ClipSpacePosition.w).xyz;
     vec3 previousPos = (v_PreviousClipSpacePosition / v_PreviousClipSpacePosition.w).xyz;
 
-    o_Velocity = vec4((pos - previousPos).xy, 0.f, 1.f);
+    o_Velocity = vec4((pos - previousPos).xy * textureColor.a, 0.f, 1.f);
 }
