@@ -5,6 +5,7 @@
 #include "Audio.h"
 #include "Input.h"
 #include "utils/GameTime.h"
+#include "utils/Random.h"
 
 int main(int argc, char* argv[])
 {
@@ -50,6 +51,7 @@ int main(int argc, char* argv[])
     // initialize game
     // ---------------
     Audio::Init();
+    Random::Init();
     m_SpaceInvaders->Init();
 
     // deltaTime variables
