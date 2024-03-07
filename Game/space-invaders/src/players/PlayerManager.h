@@ -3,6 +3,7 @@
 
 #include <iostream>
 
+#include "ParticleEmitter.h"
 #include "glm/glm.hpp"
 
 #include "../core/SpriteRenderer.h"
@@ -19,6 +20,7 @@ public:
     void CreateProjectile();
     void ProcessInput(float deltaTime, const Input& input, float boundsWidth);
     void Render(const SpriteRenderer& renderer) const;
+    void Update(float deltaTime);
     void HandlePlayerHit();
     void DestroyPlayer() const;
     void Restart(float screenWidth, float screenHeight);
@@ -28,8 +30,6 @@ public:
     int GetPlayerCurrentLives() const { return m_PlayerCurrentLives; }
     
 private:
-    IProjectileHandler& m_ProjectileHandler;
-    
     bool CheckIfCanShootAgain() const;
     glm::vec2 CalculateStartPosition(float screenWidth, float screenHeight);
     
@@ -47,7 +47,12 @@ private:
     std::shared_ptr<Texture> m_PlayerSprite;
     std::shared_ptr<Texture> m_ProjectileSprite;
 
+    IProjectileHandler& m_ProjectileHandler;
+    
     glm::vec2 m_ShotPosition;
+
+    // Particle
+    std::unique_ptr<ParticleEmitter> m_ParticleEmitter;
     
     float m_LastShotTime = 0.0f;
     

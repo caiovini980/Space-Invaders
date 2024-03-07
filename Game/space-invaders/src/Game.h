@@ -20,7 +20,8 @@ class Game : public IProjectileHandler
 public:
     Game();
     ~Game();
-    
+    void LoadParticleTextures();
+
     void Init();
     bool HasGameEnded();
     void HandleGameLost();

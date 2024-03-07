@@ -32,6 +32,8 @@ void Game::Init()
     spriteShader->SetUniform1i("u_Image", 0);
     
     m_SpriteRenderer = std::make_unique<SpriteRenderer>(spriteShader);
+
+    LoadParticleTextures();
     
     m_PlayerManager = std::make_unique<PlayerManager>(*this);
     m_PlayerManager->CreatePlayer(WIDTH, HEIGHT);
@@ -52,7 +54,8 @@ void Game::Update(float deltaTime)
 
         UpdatePlayerProjectiles(deltaTime);
         UpdateEnemyProjectiles(deltaTime);
-        
+
+        m_PlayerManager->Update(deltaTime);
         m_Level->Update(deltaTime);
     }
     else if(m_CurrentState == EGameState::GameWin)
@@ -121,6 +124,12 @@ void Game::Render()
 void Game::Close()
 {
     ResourceManager::ClearAll();
+}
+
+void Game::LoadParticleTextures()
+{
+    ResourceManager::LoadTexture("res/textures/hit-particle.png","EnemyParticle", true);
+    ResourceManager::LoadTexture("res/textures/hit-particle.png","PlayerParticle", true);
 }
 
 void Game::AddEnemyProjectile(GameObject&& projectile)
