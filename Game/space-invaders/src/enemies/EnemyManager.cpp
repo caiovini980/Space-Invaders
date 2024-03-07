@@ -15,16 +15,16 @@ EnemyManager::EnemyManager(unsigned levelWidth, unsigned levelHeight, const Leve
     SpawnEnemies(levelDefinition);
 
     m_ProjectileSprite = ResourceManager::GetTexture("Projectile");
+    const std::shared_ptr<Texture> particleSprite = ResourceManager::GetTexture("EnemyParticle");
 
     m_TotalEnemies = static_cast<int>(m_Enemies.size());
     m_MovementVelocity = INITIAL_MOVEMENT_VELOCITY * MOVEMENT_VELOCITY_MULTIPLIER_CURVE[0];
     m_ShootSecondsCooldown = SHOOT_SECONDS_COOLDOWN_CURVE[0];
     m_MovementDirection = INITIAL_MOVEMENT_DIRECTION;
 
-    for (int i = 0; i < 3; i++)
+    for (unsigned int i = 0; i < TOTAL_PARTICLE_EMITTERS; i++)
     {
-        Emmiter newEmitter = { std::make_shared<ParticleEmitter>("res/textures/hit-particle.png"), true };
-        m_ParticleEmitters.emplace_back(newEmitter);
+        m_ParticleEmitters.emplace_back(std::make_shared<ParticleEmitter>(particleSprite));
     }
 }
 
@@ -32,7 +32,7 @@ void EnemyManager::Update(float deltaTime)
 {
     for (const auto& particleEmmiter : m_ParticleEmitters)
     {
-        particleEmmiter.ParticleEmitterPtr->Update(deltaTime);
+        particleEmmiter->Update(deltaTime);
     }
     
     MoveEnemies(deltaTime);
@@ -148,7 +148,7 @@ void EnemyManager::Render(const SpriteRenderer& renderer)
     {
         for (const auto& particleEmmiter : m_ParticleEmitters)
         {
-            particleEmmiter.ParticleEmitterPtr->Render(renderer);
+            particleEmmiter->Render(renderer);
         }
         
         if (enemy.Destroyed) continue;
@@ -163,26 +163,8 @@ void EnemyManager::HandleEnemyHit(GameObject& enemy)
 
     Audio::Play2DSound("./res/sounds/explosion.wav", false, 0.2f);
 
-    bool bFoundAvailableEmitter = false;
-    for (auto& particleEmmiter : m_ParticleEmitters)
-    {
-        if (!particleEmmiter.CanEmmit) continue;
-        
-        particleEmmiter.ParticleEmitterPtr->Emit(enemy);
-        particleEmmiter.CanEmmit = false;
-        bFoundAvailableEmitter = true;
-        break;
-    }
-
-    if (!bFoundAvailableEmitter)
-    {
-        for (auto& particleEmmiter : m_ParticleEmitters)
-        {
-            particleEmmiter.CanEmmit = true;
-        }
-
-        HandleEnemyHit(enemy);
-    }
+    m_ParticleEmitters[m_EmitterIndex]->Emit(enemy);
+    m_EmitterIndex = (m_EmitterIndex + 1) % TOTAL_PARTICLE_EMITTERS;
     
     IncreaseDifficulty();
 }

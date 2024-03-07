@@ -4,9 +4,9 @@
 #include "utils/GameTime.h"
 #include "utils/Random.h"
 
-ParticleEmitter::ParticleEmitter(const char* spritePath)
+ParticleEmitter::ParticleEmitter(const std::shared_ptr<Texture>& sprite)
+    : m_ParticleSprite(sprite)
 {
-    m_ParticleSprite = ResourceManager::LoadTexture(spritePath, "PlayerParticle", true);
     SpawnParticles();
 }
 
@@ -15,8 +15,9 @@ void ParticleEmitter::Update(float deltaTime)
     for (int i = 0; i < m_AmountOfParticles; i++)
     {
         m_ParticleProps[i].Object.Position += m_ParticleProps[i].Speed * deltaTime * m_ParticleProps[i].Direction;
+        m_ParticleProps[i].Lifetime -= deltaTime;
         
-        if (GameTime::Time - m_ParticleProps[i].SpawnedTime >= m_ParticleProps[i].TimeToFadeAway)
+        if (m_ParticleProps[i].Lifetime <= 0)
         {
             m_ParticleProps[i].Object.Destroyed = true;
         }
@@ -38,7 +39,7 @@ void ParticleEmitter::Emit(const GameObject& source)
 {
     for (int i = 0; i < m_AmountOfParticles; i++)
     {
-        m_ParticleProps[i].SpawnedTime = GameTime::Time;
+        m_ParticleProps[i].Lifetime = Random::Float() * 2;
         m_ParticleProps[i].Direction = GetRandomDirectionToParticle();
         m_ParticleProps[i].Object.Destroyed = false;
         m_ParticleProps[i].Object.Position = glm::vec2(
@@ -58,10 +59,10 @@ void ParticleEmitter::SpawnParticles()
     {
         constexpr glm::vec2 size = glm::vec2(20.0f, 20.0f);
         constexpr glm::vec3 color = glm::vec3(1.0f, 1.0f, 0.0f);
-        glm::vec2 position = glm::vec2(1000.f); // outside the screen
+        glm::vec2 outsideScreenPosition = glm::vec2(1000.f);
             
         GameObject newParticle {
-            position,
+            outsideScreenPosition,
             size,
             m_ParticleSprite,
             color
@@ -70,8 +71,7 @@ void ParticleEmitter::SpawnParticles()
         ParticleProps prop;
         prop.Object = newParticle;
         prop.Direction = GetRandomDirectionToParticle();
-        prop.SpawnedTime = GameTime::Time;
-        prop.TimeToFadeAway = Random::Float() * 2;
+        prop.Lifetime = Random::Float() * 2;
         prop.Speed = Random::Float() * 50;
 
         m_ParticleProps.emplace_back(prop);

@@ -10,7 +10,7 @@
 class ParticleEmitter
 {
 public:
-    ParticleEmitter(const char* spritePath);
+    ParticleEmitter(const std::shared_ptr<Texture>& sprite);
 
     void Update(float deltaTime);
     void Render(const SpriteRenderer& renderer);
@@ -21,8 +21,7 @@ private:
     {
         mutable GameObject Object;
         glm::vec2 Direction;
-        float SpawnedTime;
-        float TimeToFadeAway;
+        float Lifetime;
         float Speed;
     };
 

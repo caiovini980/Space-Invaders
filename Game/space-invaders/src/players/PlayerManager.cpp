@@ -39,8 +39,10 @@ void PlayerManager::CreatePlayer(float screenWidth, float screenHeight)
         );
     
     m_PlayerCurrentLives = PLAYER_INITIAL_LIVES;
+
+    const std::shared_ptr<Texture> particleSprite = ResourceManager::GetTexture("PlayerParticle");
     
-    m_ParticleEmitter = std::make_unique<ParticleEmitter>("res/textures/hit-particle.png");
+    m_ParticleEmitter = std::make_unique<ParticleEmitter>(particleSprite);
 }
 
 void PlayerManager::ProcessInput(float deltaTime, const Input& input, float boundsWidth)

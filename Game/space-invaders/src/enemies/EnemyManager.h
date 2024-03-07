@@ -49,6 +49,9 @@ private:
         7.f,
         14.f
     };
+
+    const unsigned int TOTAL_PARTICLE_EMITTERS = 3;
+    
     const glm::vec2 INITIAL_MOVEMENT_VELOCITY{20.f, 20.f};
     const glm::vec2 INITIAL_MOVEMENT_DIRECTION{1.f, 0.f};
     const glm::vec2 SHOOT_VELOCITY{0.f, 300.f};
@@ -81,12 +84,7 @@ private:
     void SpawnEnemies(const LevelDefinition& level);
     glm::vec2 CalculateEnemySize(const LevelDefinition& level);
     glm::vec2 CalculateStartPosition(const LevelDefinition& level);
-
-    struct Emmiter
-    {
-        std::shared_ptr<ParticleEmitter> ParticleEmitterPtr;
-        bool CanEmmit;
-    };
     
-    std::vector<Emmiter> m_ParticleEmitters; // map <Emitter, canEmit>
+    std::vector<std::shared_ptr<ParticleEmitter>> m_ParticleEmitters;
+    unsigned int m_EmitterIndex{0};
 };
