@@ -2,6 +2,7 @@
 
 #include <iostream>
 #include <memory>
+#include "Core.h"
 #include <GLFW/glfw3.h>
 
 #include "Audio.h"
@@ -10,7 +11,9 @@
 #include "SpriteRenderer.h"
 #include "players/PlayerManager.h"
 #include "Collision.h"
+#include "Framebuffer.h"
 #include "background/BackgroundManager.h"
+#include "effects/PostProcessingManager.h"
 
 #include "glm/ext/matrix_clip_space.hpp"
 #include "ui/UIManager.h"
@@ -30,6 +33,11 @@ void Game::Init()
     glm::mat4 ortho = glm::ortho(0.f, WIDTH, HEIGHT, 0.f, -1.f, 1.f);
     spriteShader->SetUniformMat4f("u_Projection", ortho);
     spriteShader->SetUniform1i("u_Image", 0);
+
+    std::shared_ptr<Shader> dynamicSpriteShader = ResourceManager::LoadShader("res/shaders/SpriteDynamic.vertex", "res/shaders/SpriteDynamic.frag", "Dynamic");
+    dynamicSpriteShader->Bind();
+    dynamicSpriteShader->SetUniformMat4f("u_Projection", ortho);
+    dynamicSpriteShader->SetUniform1i("u_Image", 0);
     
     m_SpriteRenderer = std::make_unique<SpriteRenderer>(spriteShader);
 
@@ -43,6 +51,15 @@ void Game::Init()
     
     m_UIManager = std::make_unique<UIManager>(WIDTH, HEIGHT);
 
+    m_PostProcessingManager = std::make_unique<PostProcessingManager>();
+    
+    std::vector<TextureDefinition> framebufferAdditionalTextures {
+        {GL_RG32F, GL_RG, GL_FLOAT}
+    };
+    m_Framebuffer = std::make_unique<Framebuffer>(WIDTH, HEIGHT, framebufferAdditionalTextures);
+
+    m_PostProcessingManager->SetGrayscaleEnabled(false);
+
     Audio::Play2DSound("res/sounds/cyborg-ninja.mp3", true, 0.2f);
 }
 
@@ -54,18 +71,29 @@ void Game::Update(float deltaTime)
 
         UpdatePlayerProjectiles(deltaTime);
         UpdateEnemyProjectiles(deltaTime);
-
+        RemoveDestroyedProjectiles();
+        
         m_PlayerManager->Update(deltaTime);
         m_Level->Update(deltaTime);
     }
     else if(m_CurrentState == EGameState::GameWin)
     {
         UpdatePlayerProjectiles(deltaTime);
+        RemoveDestroyedProjectiles();
     }
     else if(m_CurrentState == EGameState::GameOver)
     {
         UpdateEnemyProjectiles(deltaTime);
+        RemoveDestroyedProjectiles();
+
         m_Level->Update(deltaTime);
+    }
+    else if(m_CurrentState == EGameState::MainMenu)
+    {
+        if(m_UIManager->IsPlayRequested())
+        {
+            StartGame();
+        }
     }
 }
 
@@ -82,6 +110,10 @@ void Game::ProcessInput(float deltaTime, const Input& input)
     if (m_CurrentState == EGameState::Playing || m_CurrentState == EGameState::GameWin)
     {
         m_PlayerManager->ProcessInput(deltaTime, input, WIDTH);
+    }
+    else if(m_CurrentState == EGameState::MainMenu)
+    {
+        m_UIManager->ProcessMainMenuInput(input);
     }
 }
 
@@ -100,12 +132,27 @@ void Game::RenderProjectiles() const
 
 void Game::Render()
 {
+    m_Framebuffer->BindAndClear();
+
     m_BackgroundManager->Render(*m_SpriteRenderer);
+
+    if(m_CurrentState == EGameState::MainMenu)
+    {
+        m_Framebuffer->Unbind();
+        m_PostProcessingManager->RenderWithPostProcessing(*m_Framebuffer);
+
+        m_UIManager->RenderMainMenuScreen();
+
+        return;
+    }
+    
     m_Level->Render(*m_SpriteRenderer);
     m_PlayerManager->Render(*m_SpriteRenderer);
     
     RenderProjectiles();
-    RemoveDestroyedProjectiles();
+
+    m_Framebuffer->Unbind();
+    m_PostProcessingManager->RenderWithPostProcessing(*m_Framebuffer);
 
     if(m_CurrentState == EGameState::Playing)
     {
@@ -115,7 +162,7 @@ void Game::Render()
     {
         m_UIManager->RenderGameWinScreen();
     }
-    else if (m_CurrentState == EGameState::GameOver)
+    else if(m_CurrentState == EGameState::GameOver)
     {
         m_UIManager->RenderGameOverScreen(*m_SpriteRenderer);
     }
@@ -226,6 +273,12 @@ bool Game::TryCollidingWithBarriers(GameObject& projectile) const
     }
 
     return false;
+}
+
+void Game::StartGame()
+{
+    m_CurrentState = EGameState::Playing;
+    m_UIManager->ExitMainMenu();
 }
 
 void Game::HandleGameWon()

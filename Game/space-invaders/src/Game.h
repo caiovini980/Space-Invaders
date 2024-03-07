@@ -6,6 +6,8 @@
 #include "Input.h"
 #include "interfaces/IProjectileHandler.h"
 
+class PostProcessingManager;
+class Framebuffer;
 class UIManager;
 class TextRenderer;
 class Texture;
@@ -49,10 +51,13 @@ private:
     std::unique_ptr<SpriteRenderer> m_SpriteRenderer;
     std::unique_ptr<GameLevel> m_Level;
     std::unique_ptr<UIManager> m_UIManager;
+    std::unique_ptr<PostProcessingManager> m_PostProcessingManager;
+    std::unique_ptr<Framebuffer> m_Framebuffer;
     
-    EGameState m_CurrentState{EGameState::Playing};
+    EGameState m_CurrentState{EGameState::MainMenu};
 
     bool TryCollidingWithBarriers(GameObject& projectile) const;
+    void StartGame();
     void HandleGameWon();
     void Restart();
     void RemoveDestroyedProjectiles();

@@ -83,7 +83,7 @@ int Shader::GetUniformLocation(const std::string& name) const
 
     if(location == -1)
     {
-        std::cout << "Warning: Uniform " << name << " doesn't exist!";
+        std::cout << "Warning: Uniform " << name << " doesn't exist!\n";
     }
 
     m_UniformLocationCache[name] = location;

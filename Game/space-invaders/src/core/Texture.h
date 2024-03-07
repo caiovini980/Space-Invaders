@@ -1,5 +1,12 @@
 #pragma once
 
+struct TextureDefinition
+{
+    unsigned int InternalFormat;
+    unsigned int Format;
+    unsigned int Type;
+};
+
 class Texture
 {
 public:
