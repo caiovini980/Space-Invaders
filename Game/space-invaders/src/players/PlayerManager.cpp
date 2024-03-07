@@ -44,6 +44,10 @@ void PlayerManager::CreatePlayer(float screenWidth, float screenHeight)
     
     m_PlayerCurrentLives = PLAYER_INITIAL_LIVES;
     m_PlayerPreviousPosition = playerInitialPosition;
+
+    const std::shared_ptr<Texture> particleSprite = ResourceManager::GetTexture("PlayerParticle");
+    
+    m_ParticleEmitter = std::make_unique<ParticleEmitter>(particleSprite);
 }
 
 void PlayerManager::ProcessInput(float deltaTime, const Input& input, float boundsWidth)
@@ -102,7 +106,12 @@ void PlayerManager::CreateProjectile()
 
 void PlayerManager::Render(const SpriteRenderer& renderer) 
 {
-    if (m_Player->Destroyed) return;
+    m_ParticleEmitter->Render(renderer);
+
+    if (m_Player->Destroyed)
+    {
+        return;
+    }
 
     m_PlayerShader->Bind();
     glm::mat4 previousModel = glm::mat4{1.f};
@@ -114,10 +123,17 @@ void PlayerManager::Render(const SpriteRenderer& renderer)
     renderer.Draw(*m_PlayerShader, *m_PlayerSprite, m_Player->Position, m_Player->Size, m_Player->Rotation, m_Player->Color);
 }
 
+void PlayerManager::Update(float deltaTime)
+{
+    m_ParticleEmitter->Update(deltaTime);
+}
+
 void PlayerManager::HandlePlayerHit()
 {
     m_PlayerCurrentLives -= 1;
 
+    m_ParticleEmitter->Emit(*m_Player);
+    
     if (m_PlayerCurrentLives <= 0)
     {
         Audio::Play2DSound("./res/sounds/explosion.wav", false, 0.2f);

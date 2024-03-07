@@ -4,6 +4,7 @@
 
 #include "Audio.h"
 #include "LevelDefinition.h"
+#include "ParticleEmitter.h"
 #include "ResourceManager.h"
 #include "interfaces/IProjectileHandler.h"
 #include "utils/GameTime.h"
@@ -14,15 +15,26 @@ EnemyManager::EnemyManager(unsigned levelWidth, unsigned levelHeight, const Leve
     SpawnEnemies(levelDefinition);
 
     m_ProjectileSprite = ResourceManager::GetTexture("Projectile");
+    const std::shared_ptr<Texture> particleSprite = ResourceManager::GetTexture("EnemyParticle");
 
     m_TotalEnemies = static_cast<int>(m_Enemies.size());
     m_MovementVelocity = INITIAL_MOVEMENT_VELOCITY * MOVEMENT_VELOCITY_MULTIPLIER_CURVE[0];
     m_ShootSecondsCooldown = SHOOT_SECONDS_COOLDOWN_CURVE[0];
     m_MovementDirection = INITIAL_MOVEMENT_DIRECTION;
+
+    for (unsigned int i = 0; i < TOTAL_PARTICLE_EMITTERS; i++)
+    {
+        m_ParticleEmitters.emplace_back(std::make_shared<ParticleEmitter>(particleSprite));
+    }
 }
 
 void EnemyManager::Update(float deltaTime)
 {
+    for (const auto& particleEmmiter : m_ParticleEmitters)
+    {
+        particleEmmiter->Update(deltaTime);
+    }
+    
     MoveEnemies(deltaTime);
 
     if(CanShoot())
@@ -134,6 +146,11 @@ void EnemyManager::Render(const SpriteRenderer& renderer)
 {
     for(const GameObject& enemy : m_Enemies)
     {
+        for (const auto& particleEmmiter : m_ParticleEmitters)
+        {
+            particleEmmiter->Render(renderer);
+        }
+        
         if (enemy.Destroyed) continue;
         enemy.Draw(renderer);
     }
@@ -143,8 +160,11 @@ void EnemyManager::HandleEnemyHit(GameObject& enemy)
 {
     m_TotalEnemiesKilled++;
     enemy.Destroyed = true;
-    
+
     Audio::Play2DSound("./res/sounds/explosion.wav", false, 0.2f);
+
+    m_ParticleEmitters[m_EmitterIndex]->Emit(enemy);
+    m_EmitterIndex = (m_EmitterIndex + 1) % TOTAL_PARTICLE_EMITTERS;
     
     IncreaseDifficulty();
 }

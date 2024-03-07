@@ -24,6 +24,8 @@ public:
     void SetUniform4f(const std::string& name, const glm::vec4& value);
     void SetUniformMat4f(const std::string& name, const glm::mat4& mat);
 
+    unsigned int GetRendererID() const { return m_RendererID; }
+
 private:
 
     unsigned int m_RendererID{0};
