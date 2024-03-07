@@ -19,19 +19,22 @@ public:
 private:
     struct ParticleProps
     {
-        mutable GameObject Object;
+        glm::vec2 Position;
+        glm::vec2 Size;
+        float Rotation;
+        glm::vec3 Color;
         glm::vec2 Direction;
         float Lifetime;
         float Speed;
     };
 
-    glm::vec2 GetRandomDirectionToParticle();
+    inline glm::vec2 GetRandomDirectionToParticle();
     void SpawnParticles();
     
     std::vector<ParticleProps> m_ParticleProps;
     
     std::shared_ptr<Texture> m_ParticleSprite;
 
-    int m_AmountOfParticles { 10 };
+    int m_AmountOfParticles { 5 };
 };
 
