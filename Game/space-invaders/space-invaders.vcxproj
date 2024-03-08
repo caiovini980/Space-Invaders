@@ -665,7 +665,7 @@
     <Content Include="res\data\enemies\1.enemy" />
     <Content Include="res\data\enemies\2.enemy" />
     <Content Include="res\data\enemies\3.enemy" />
-    <Content Include="res\data\levels\01.level" />
+    <Content Include="res\data\levels\1.level" />
     <Content Include="res\fonts\dogicapixel.ttf" />
     <Content Include="res\fonts\dogicapixelbold.ttf" />
     <Content Include="res\shaders\PostProcessing.frag" />

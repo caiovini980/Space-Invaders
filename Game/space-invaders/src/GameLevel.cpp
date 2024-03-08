@@ -9,7 +9,7 @@
 
 GameLevel::GameLevel(unsigned int width, unsigned int height, IProjectileHandler& projectileHandler)
 {
-    LevelDefinition levelDefinition = Load("res/data/levels/01.level", width, height);
+    LevelDefinition levelDefinition = Load("res/data/levels/1.level", width, height);
     
     m_EnemyManager = std::make_unique<EnemyManager>(width, height, levelDefinition, projectileHandler);
     
