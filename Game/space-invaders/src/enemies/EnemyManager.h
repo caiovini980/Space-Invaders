@@ -1,10 +1,10 @@
 #pragma once
-#include <map>
 #include <vector>
 
 #include "ParticleEmitter.h"
 #include "../GameObject.h"
 #include "../LevelDefinition.h"
+#include "EnemyDatabase.h"
 
 class IProjectileHandler;
 class SpriteRenderer;
@@ -87,4 +87,5 @@ private:
     
     std::vector<std::shared_ptr<ParticleEmitter>> m_ParticleEmitters;
     unsigned int m_EmitterIndex{0};
+    std::unique_ptr<EnemyDatabase> m_Database;
 };

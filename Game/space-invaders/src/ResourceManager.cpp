@@ -30,6 +30,16 @@ std::shared_ptr<Texture> ResourceManager::LoadTexture(const std::string& texture
     return m_Textures[name];
 }
 
+std::shared_ptr<Texture> ResourceManager::GetOrLoadTexture(const std::string& texturePath, const std::string& name, bool bUseAlpha, bool bFlipVertically)
+{
+    if(m_Textures.find(name) == m_Textures.end())
+    {
+        m_Textures[name] = LoadTextureFromFile(texturePath);
+    }
+
+    return m_Textures[name];
+}
+
 std::shared_ptr<Texture> ResourceManager::GetTexture(const std::string& name)
 {
     return m_Textures[name];

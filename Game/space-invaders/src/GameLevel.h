@@ -38,4 +38,5 @@ private:
     std::shared_ptr<Texture> m_BarrierBreakingTexture;
 
     void SpawnBarriers(float screenWidth, float screenHeight, const LevelDefinition& level);
+    LevelDefinition Load(const char* levelFilePath, unsigned int width, unsigned int height);
 };

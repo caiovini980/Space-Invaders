@@ -1,0 +1,4 @@
+name: DefaultEnemy
+sprite: res/textures/enemy.png
+color: #b2b200
+points: 100
