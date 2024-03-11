@@ -5,6 +5,7 @@
 #include "enemies/EnemyManager.h"
 #include "level/Barrier.h"
 
+class IScoreHandler;
 class Shader;
 class IProjectileHandler;
 class SpriteRenderer;
@@ -13,15 +14,15 @@ class GameLevel
 {
 public:
 
-    GameLevel(unsigned int width, unsigned int height, IProjectileHandler& projectileHandler);
+    GameLevel(unsigned int width, unsigned int height, IProjectileHandler& projectileHandler, IScoreHandler& scoreHandler);
     
     void Update(float deltaTime);
     void Render(const SpriteRenderer& renderer);
 
-    std::vector<GameObject>& GetEnemies() const { return m_EnemyManager->GetEnemies(); }
+    std::vector<Enemy>& GetEnemies() const { return m_EnemyManager->GetEnemies(); }
     std::vector<Barrier>& GetBarriers() { return m_Barriers; }
 
-    void HandleEnemyHit(GameObject& projectile);
+    void HandleEnemyHit(Enemy& enemy);
     bool IsEveryEnemyKilled() const;
     bool HasEnemyReachedBottom() const;
     void StopEnemiesAggression() const;
@@ -38,4 +39,5 @@ private:
     std::shared_ptr<Texture> m_BarrierBreakingTexture;
 
     void SpawnBarriers(float screenWidth, float screenHeight, const LevelDefinition& level);
+    LevelDefinition Load(const char* levelFilePath, unsigned int width, unsigned int height);
 };

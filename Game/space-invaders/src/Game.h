@@ -6,6 +6,7 @@
 #include "Input.h"
 #include "interfaces/IProjectileHandler.h"
 
+class ScoreManager;
 class PostProcessingManager;
 class Framebuffer;
 class UIManager;
@@ -51,6 +52,7 @@ private:
     std::unique_ptr<SpriteRenderer> m_SpriteRenderer;
     std::unique_ptr<GameLevel> m_Level;
     std::unique_ptr<UIManager> m_UIManager;
+    std::unique_ptr<ScoreManager> m_ScoreManager;
     std::unique_ptr<PostProcessingManager> m_PostProcessingManager;
     std::unique_ptr<Framebuffer> m_Framebuffer;
     

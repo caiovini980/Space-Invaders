@@ -69,9 +69,10 @@ void UIManager::ExitMainMenu()
     m_TextRenderer->ChangeShader(m_DefaultTextShader);
 }
 
-void UIManager::RenderInGameScreen(unsigned int playerLives) const
+void UIManager::RenderInGameScreen(unsigned int playerLives, unsigned int score) const
 {
-    m_TextRenderer->RenderText("LIVES: " + std::to_string(playerLives), 20.f, 20.f, 1.f, glm::vec3{1.f});
+    m_TextRenderer->RenderText("LIVES: " + std::to_string(playerLives), 20.f, 20.f, 0.5f, glm::vec3{1.f});
+    m_TextRenderer->RenderText("Score: " + std::to_string(score), 350.f, 20.f, 0.5f, glm::vec3{1.f});
 }
 
 void UIManager::RenderGameWinScreen() const

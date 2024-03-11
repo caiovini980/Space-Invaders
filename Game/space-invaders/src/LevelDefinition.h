@@ -1,7 +1,9 @@
 #pragma once
+#include <vector>
 
 struct LevelDefinition
 {
+    std::vector<std::vector<unsigned int>> EnemyIds{};
     unsigned int TotalEnemyRows;
     unsigned int TotalEnemyColumns;
     float Padding;

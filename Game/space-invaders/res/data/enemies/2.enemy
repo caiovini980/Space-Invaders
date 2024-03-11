@@ -1,0 +1,4 @@
+name: MidEnemy
+sprite: res/textures/mid-enemy.png
+color: #b2b200
+points: 100

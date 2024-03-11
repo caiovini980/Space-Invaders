@@ -3,15 +3,19 @@
 #include <iostream>
 
 #include "Audio.h"
+#include "EnemyDefinition.h"
+#include "IScoreHandler.h"
 #include "LevelDefinition.h"
 #include "ParticleEmitter.h"
 #include "ResourceManager.h"
 #include "interfaces/IProjectileHandler.h"
 #include "utils/GameTime.h"
 
-EnemyManager::EnemyManager(unsigned levelWidth, unsigned levelHeight, const LevelDefinition& levelDefinition, IProjectileHandler& projectileHandler)
-    : m_LevelWidth(levelWidth), m_LevelHeight(levelHeight), m_ProjectileHandler(projectileHandler), m_Level(levelDefinition) 
+EnemyManager::EnemyManager(unsigned levelWidth, unsigned levelHeight, const LevelDefinition& levelDefinition, IProjectileHandler& projectileHandler, IScoreHandler& scoreHandler)
+    : m_LevelWidth(levelWidth), m_LevelHeight(levelHeight), m_ProjectileHandler(projectileHandler), m_Level(levelDefinition), m_ScoreHandler(scoreHandler) 
 {
+    m_Database = std::make_unique<EnemyDatabase>();
+
     SpawnEnemies(levelDefinition);
 
     m_ProjectileSprite = ResourceManager::GetTexture("Projectile");
@@ -156,7 +160,7 @@ void EnemyManager::Render(const SpriteRenderer& renderer)
     }
 }
 
-void EnemyManager::HandleEnemyHit(GameObject& enemy)
+void EnemyManager::HandleEnemyHit(Enemy& enemy)
 {
     m_TotalEnemiesKilled++;
     enemy.Destroyed = true;
@@ -165,6 +169,8 @@ void EnemyManager::HandleEnemyHit(GameObject& enemy)
 
     m_ParticleEmitters[m_EmitterIndex]->Emit(enemy);
     m_EmitterIndex = (m_EmitterIndex + 1) % TOTAL_PARTICLE_EMITTERS;
+
+    m_ScoreHandler.AddScore(enemy.GetPoints());
     
     IncreaseDifficulty();
 }
@@ -224,6 +230,13 @@ void EnemyManager::Restart()
     {
         for(unsigned int x = 0; x < m_Level.TotalEnemyColumns; x++)
         {
+            std::shared_ptr<EnemyDefinition> definition = m_Database->GetDefinition(m_Level.EnemyIds[y][x]);
+
+            if(!definition)
+            {
+                continue;
+            }
+
             glm::vec2 position = startPosition;
             position.x += (m_Level.Padding + m_EnemySize.x) * x;
             position.y += (m_Level.Padding + m_EnemySize.y) * y;
@@ -238,35 +251,26 @@ void EnemyManager::Restart()
 
 void EnemyManager::SpawnEnemies(const LevelDefinition& level)
 {
-    std::shared_ptr<Texture> enemySprite = ResourceManager::LoadTexture("res/textures/enemy.png", "Enemy", true);
-    
     m_EnemySize = CalculateEnemySize(level);
     glm::vec2 startPosition = CalculateStartPosition(level);
-
-    std::vector<glm::vec3> colorMapping{
-        glm::vec3{0.7f, 0.f, 0.7f},
-        glm::vec3{0.7f, 0.7f, 0.f},
-        glm::vec3{0.f, 0.7f, 0.7f}
-    };
-
-    int totalColors = static_cast<int>(colorMapping.size());
-    int colorIndex = 0;
-    const int rowsPerColor = 2;
 
     for(unsigned int y = 0; y < level.TotalEnemyRows; y++)
     {
         for(unsigned int x = 0; x < level.TotalEnemyColumns; x++)
         {
+            std::shared_ptr<EnemyDefinition> definition = m_Database->GetDefinition(level.EnemyIds[y][x]);
+
+            if(!definition)
+            {
+                continue;
+            }
+            
             glm::vec2 position = startPosition;
             position.x += (level.Padding + m_EnemySize.x) * x;
             position.y += (level.Padding + m_EnemySize.y) * y;
 
-            m_Enemies.emplace_back(position, m_EnemySize, enemySprite, colorMapping[colorIndex]);
-        }
-
-        if(y % rowsPerColor == 0)
-        {
-            colorIndex = (colorIndex + 1) % totalColors;
+            std::shared_ptr<Texture> enemySprite = ResourceManager::GetOrLoadTexture(definition->SpritePath, definition->Name, true);
+            m_Enemies.emplace_back(*definition, position, m_EnemySize, enemySprite);
         }
     }
 }

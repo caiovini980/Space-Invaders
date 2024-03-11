@@ -15,6 +15,7 @@ public:
     static std::shared_ptr<Shader> GetShader(const std::string& name);
     static std::shared_ptr<Texture> LoadTexture(const std::string& texturePath, const std::string& name, bool bUseAlpha = true, bool bFlipVertically = false);
     static std::shared_ptr<Texture> GetTexture(const std::string& name);
+    static std::shared_ptr<Texture> GetOrLoadTexture(const std::string& texturePath, const std::string& name, bool bUseAlpha = true, bool bFlipVertically = false);
     static void ClearAll();
 
 private:

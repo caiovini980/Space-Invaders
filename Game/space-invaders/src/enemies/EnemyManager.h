@@ -1,11 +1,13 @@
 #pragma once
-#include <map>
 #include <vector>
 
+#include "Enemy.h"
 #include "ParticleEmitter.h"
 #include "../GameObject.h"
 #include "../LevelDefinition.h"
+#include "EnemyDatabase.h"
 
+class IScoreHandler;
 class IProjectileHandler;
 class SpriteRenderer;
 
@@ -13,17 +15,17 @@ class EnemyManager
 {
 public:
 
-    EnemyManager(unsigned int levelWidth, unsigned int levelHeight, const LevelDefinition& levelDefinition, IProjectileHandler& projectileHandler);
+    EnemyManager(unsigned int levelWidth, unsigned int levelHeight, const LevelDefinition& levelDefinition, IProjectileHandler& projectileHandler, IScoreHandler& scoreHandler);
     
     void Update(float deltaTime);
     void Render(const SpriteRenderer& renderer);
-    void HandleEnemyHit(GameObject& enemy);
+    void HandleEnemyHit(Enemy& enemy);
     bool IsEveryEnemyKilled() const;
     bool HasEnemyReachedBottom() const;
     void StopAggression();
     void Restart();
 
-    std::vector<GameObject>& GetEnemies() { return m_Enemies; }
+    std::vector<Enemy>& GetEnemies() { return m_Enemies; }
     
 private:
 
@@ -61,7 +63,7 @@ private:
     unsigned int m_LevelWidth{0};
     unsigned int m_LevelHeight{0};
     IProjectileHandler& m_ProjectileHandler;
-    std::vector<GameObject> m_Enemies{};
+    std::vector<Enemy> m_Enemies{};
     glm::vec2 m_EnemySize{40.f, 40.f};
     glm::vec2 m_MovementDirection{1.f, 0.f};
     glm::vec2 m_MovementVelocity{20.f, 20.f};
@@ -74,6 +76,10 @@ private:
     LevelDefinition m_Level;
     bool bIsPassiveBehaviorEnabled{false};
     bool bHasEnemyReachedBottom{false};
+    std::vector<std::shared_ptr<ParticleEmitter>> m_ParticleEmitters;
+    unsigned int m_EmitterIndex{0};
+    std::unique_ptr<EnemyDatabase> m_Database;
+    IScoreHandler& m_ScoreHandler;
 
     void MoveEnemies(float deltaTime);
     void MoveEnemiesDownwards();
@@ -84,7 +90,4 @@ private:
     void SpawnEnemies(const LevelDefinition& level);
     glm::vec2 CalculateEnemySize(const LevelDefinition& level);
     glm::vec2 CalculateStartPosition(const LevelDefinition& level);
-    
-    std::vector<std::shared_ptr<ParticleEmitter>> m_ParticleEmitters;
-    unsigned int m_EmitterIndex{0};
 };
