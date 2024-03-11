@@ -17,7 +17,7 @@ public:
     void ProcessMainMenuInput(const Input& input);
     void RenderMainMenuScreen() const;
     void ExitMainMenu();
-    void RenderInGameScreen(unsigned int playerLives) const;
+    void RenderInGameScreen(unsigned int playerLives, unsigned int score) const;
     void RenderGameWinScreen() const;
     void RenderGameOverScreen(const SpriteRenderer& renderer) const;
     void Restart() const;

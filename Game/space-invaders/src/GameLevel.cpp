@@ -7,11 +7,11 @@
 #include "ResourceManager.h"
 #include "glm/ext/matrix_clip_space.hpp"
 
-GameLevel::GameLevel(unsigned int width, unsigned int height, IProjectileHandler& projectileHandler)
+GameLevel::GameLevel(unsigned int width, unsigned int height, IProjectileHandler& projectileHandler, IScoreHandler& scoreHandler)
 {
     LevelDefinition levelDefinition = Load("res/data/levels/1.level", width, height);
     
-    m_EnemyManager = std::make_unique<EnemyManager>(width, height, levelDefinition, projectileHandler);
+    m_EnemyManager = std::make_unique<EnemyManager>(width, height, levelDefinition, projectileHandler, scoreHandler);
     
     SpawnBarriers(static_cast<float>(width), static_cast<float>(height), levelDefinition);
 
@@ -51,7 +51,7 @@ void GameLevel::Render(const SpriteRenderer& renderer)
     m_EnemyManager->Render(renderer);
 }
 
-void GameLevel::HandleEnemyHit(GameObject& enemy)
+void GameLevel::HandleEnemyHit(Enemy& enemy)
 {
     m_EnemyManager->HandleEnemyHit(enemy);
 }
@@ -129,7 +129,6 @@ LevelDefinition GameLevel::Load(const char* levelFilePath, unsigned int width, u
     levelDefinition.BarrierPadding = levelDefinition.TotalBarriers > 0 ? 400.f / static_cast<float>(levelDefinition.TotalBarriers) : 0.f;
     levelDefinition.BarrierHorizontalMargin = 40.f;
     levelDefinition.BarrierBottomMargin = 100.f;
-
 
     std::ifstream fileStream(levelFilePath);
     assert(fileStream);

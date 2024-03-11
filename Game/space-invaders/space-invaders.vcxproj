@@ -179,6 +179,7 @@
     <ClCompile Include="src\core\VertexBuffer.cpp" />
     <ClCompile Include="src\core\VertexBufferLayout.cpp" />
     <ClCompile Include="src\effects\PostProcessingManager.cpp" />
+    <ClCompile Include="src\enemies\Enemy.cpp" />
     <ClCompile Include="src\enemies\EnemyDatabase.cpp" />
     <ClCompile Include="src\enemies\EnemyDefinition.cpp" />
     <ClCompile Include="src\enemies\EnemyManager.cpp" />
@@ -190,6 +191,7 @@
     <ClCompile Include="src\level\Barrier.cpp" />
     <ClCompile Include="src\players\PlayerManager.cpp" />
     <ClCompile Include="src\ResourceManager.cpp" />
+    <ClCompile Include="src\score\ScoreManager.cpp" />
     <ClCompile Include="src\ui\UIManager.cpp" />
     <ClCompile Include="src\utils\Color.cpp" />
     <ClCompile Include="src\utils\GameTime.cpp" />
@@ -216,6 +218,7 @@
     <ClInclude Include="src\core\VertexBufferLayout.h" />
     <ClInclude Include="src\effects\PostProcessingManager.h" />
     <ClInclude Include="src\EGameState.h" />
+    <ClInclude Include="src\enemies\Enemy.h" />
     <ClInclude Include="src\enemies\EnemyDatabase.h" />
     <ClInclude Include="src\enemies\EnemyDefinition.h" />
     <ClInclude Include="src\enemies\EnemyManager.h" />
@@ -224,10 +227,12 @@
     <ClInclude Include="src\GameObject.h" />
     <ClInclude Include="src\Input.h" />
     <ClInclude Include="src\interfaces\IProjectileHandler.h" />
+    <ClInclude Include="src\IScoreHandler.h" />
     <ClInclude Include="src\LevelDefinition.h" />
     <ClInclude Include="src\level\Barrier.h" />
     <ClInclude Include="src\players\PlayerManager.h" />
     <ClInclude Include="src\ResourceManager.h" />
+    <ClInclude Include="src\score\ScoreManager.h" />
     <ClInclude Include="src\ui\UIManager.h" />
     <ClInclude Include="src\utils\Color.h" />
     <ClInclude Include="src\utils\GameTime.h" />

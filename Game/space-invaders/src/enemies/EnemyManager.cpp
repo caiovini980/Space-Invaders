@@ -4,14 +4,15 @@
 
 #include "Audio.h"
 #include "EnemyDefinition.h"
+#include "IScoreHandler.h"
 #include "LevelDefinition.h"
 #include "ParticleEmitter.h"
 #include "ResourceManager.h"
 #include "interfaces/IProjectileHandler.h"
 #include "utils/GameTime.h"
 
-EnemyManager::EnemyManager(unsigned levelWidth, unsigned levelHeight, const LevelDefinition& levelDefinition, IProjectileHandler& projectileHandler)
-    : m_LevelWidth(levelWidth), m_LevelHeight(levelHeight), m_ProjectileHandler(projectileHandler), m_Level(levelDefinition) 
+EnemyManager::EnemyManager(unsigned levelWidth, unsigned levelHeight, const LevelDefinition& levelDefinition, IProjectileHandler& projectileHandler, IScoreHandler& scoreHandler)
+    : m_LevelWidth(levelWidth), m_LevelHeight(levelHeight), m_ProjectileHandler(projectileHandler), m_Level(levelDefinition), m_ScoreHandler(scoreHandler) 
 {
     m_Database = std::make_unique<EnemyDatabase>();
 
@@ -159,7 +160,7 @@ void EnemyManager::Render(const SpriteRenderer& renderer)
     }
 }
 
-void EnemyManager::HandleEnemyHit(GameObject& enemy)
+void EnemyManager::HandleEnemyHit(Enemy& enemy)
 {
     m_TotalEnemiesKilled++;
     enemy.Destroyed = true;
@@ -168,6 +169,8 @@ void EnemyManager::HandleEnemyHit(GameObject& enemy)
 
     m_ParticleEmitters[m_EmitterIndex]->Emit(enemy);
     m_EmitterIndex = (m_EmitterIndex + 1) % TOTAL_PARTICLE_EMITTERS;
+
+    m_ScoreHandler.AddScore(enemy.GetPoints());
     
     IncreaseDifficulty();
 }
@@ -267,7 +270,7 @@ void EnemyManager::SpawnEnemies(const LevelDefinition& level)
             position.y += (level.Padding + m_EnemySize.y) * y;
 
             std::shared_ptr<Texture> enemySprite = ResourceManager::LoadTexture(definition->SpritePath, definition->Name, true);
-            m_Enemies.emplace_back(position, m_EnemySize, enemySprite, definition->Color);
+            m_Enemies.emplace_back(*definition, position, m_EnemySize, enemySprite);
         }
     }
 }

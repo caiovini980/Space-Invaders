@@ -16,6 +16,7 @@
 #include "effects/PostProcessingManager.h"
 
 #include "glm/ext/matrix_clip_space.hpp"
+#include "score/ScoreManager.h"
 #include "ui/UIManager.h"
 
 Game::Game() {}
@@ -45,8 +46,10 @@ void Game::Init()
     
     m_PlayerManager = std::make_unique<PlayerManager>(*this);
     m_PlayerManager->CreatePlayer(WIDTH, HEIGHT);
+
+    m_ScoreManager = std::make_unique<ScoreManager>();
     
-    m_Level = std::make_unique<GameLevel>(WIDTH, HEIGHT, *this);
+    m_Level = std::make_unique<GameLevel>(WIDTH, HEIGHT, *this, *m_ScoreManager);
     m_BackgroundManager = std::make_unique<BackgroundManager>(WIDTH, HEIGHT);
     
     m_UIManager = std::make_unique<UIManager>(WIDTH, HEIGHT);
@@ -156,7 +159,7 @@ void Game::Render()
 
     if(m_CurrentState == EGameState::Playing)
     {
-        m_UIManager->RenderInGameScreen(m_PlayerManager->GetPlayerCurrentLives());
+        m_UIManager->RenderInGameScreen(m_PlayerManager->GetPlayerCurrentLives(), m_ScoreManager->GetTotalScore());
     }
     else if(m_CurrentState == EGameState::GameWin)
     {
@@ -241,7 +244,7 @@ void Game::UpdateEnemyProjectiles(float deltaTime)
 
 void Game::CheckEnemyCollisions(GameObject& projectile) const
 {
-    for (auto& enemy : m_Level->GetEnemies())
+    for (Enemy& enemy : m_Level->GetEnemies())
     {
         if (enemy.Destroyed) { continue; }
         if (!Collision::IsColliding(projectile, enemy)) { continue; }
@@ -324,6 +327,7 @@ void Game::Restart()
     m_PlayerManager->Restart(WIDTH, HEIGHT);
     m_Level->Restart();
     m_UIManager->Restart();
+    m_ScoreManager->Restart();
 }
 
 void Game::RemoveDestroyedProjectiles()
