@@ -269,7 +269,7 @@ void EnemyManager::SpawnEnemies(const LevelDefinition& level)
             position.x += (level.Padding + m_EnemySize.x) * x;
             position.y += (level.Padding + m_EnemySize.y) * y;
 
-            std::shared_ptr<Texture> enemySprite = ResourceManager::LoadTexture(definition->SpritePath, definition->Name, true);
+            std::shared_ptr<Texture> enemySprite = ResourceManager::GetOrLoadTexture(definition->SpritePath, definition->Name, true);
             m_Enemies.emplace_back(*definition, position, m_EnemySize, enemySprite);
         }
     }
