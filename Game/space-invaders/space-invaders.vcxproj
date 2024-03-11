@@ -689,12 +689,15 @@
     <Content Include="res\sounds\laser-shot.mp3" />
     <Content Include="res\sounds\level-complete.wav" />
     <Content Include="res\textures\awesomeface.png" />
+    <Content Include="res\textures\back-enemy.png" />
     <Content Include="res\textures\background.png" />
     <Content Include="res\textures\block.png" />
     <Content Include="res\textures\block_breaking.png" />
     <Content Include="res\textures\endgameGuiBackground.png" />
     <Content Include="res\textures\enemy.png" />
+    <Content Include="res\textures\front-enemy.png" />
     <Content Include="res\textures\hit-particle.png" />
+    <Content Include="res\textures\mid-enemy.png" />
     <Content Include="res\textures\projectile.png" />
     <Content Include="res\textures\ship.png" />
   </ItemGroup>

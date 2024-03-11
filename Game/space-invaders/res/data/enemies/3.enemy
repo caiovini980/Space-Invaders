@@ -1,4 +1,4 @@
-name: DefaultEnemy
-sprite: res/textures/enemy.png
+name: BackEnemy
+sprite: res/textures/back-enemy.png
 color: #b200b2
 points: 400
